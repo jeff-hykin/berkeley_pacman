@@ -1,18 +1,28 @@
-# Installation
+# Manual Installation
+(If you have problems, follow the Auto installation)
+Install:
+    - git
+    - Python 3.8
+    - then `cd` into the `./main` folder and you'll be ready to run code
+    - `python autograder.py`, `python pacman.py`, `python pacman.py --help` and take a look at `./commmands/project/pacman_examples` to see different options for argument
+
+# Auto Installation
 
 TLDR:
 - install nix
-- run `commands/start` (uses nix to install everything else)
-- * some extra work stuff if you have Windows
+- run `commands/start` (which uses nix to install everything)
+- \* some extra work if you have Windows
+
 <br>
 
 ### For Windows
 
 * Normally you just install [WSL](https://youtu.be/av0UQy6g2FA?t=91) and everything works, however the project uses a GUI and WSL doesn't like GUI's. So there are a few options:
-    1. (Recommended) Install [virtualbox](https://www.virtualbox.org/wiki/Downloads) and setup Ubuntu 18.04 or Ubuntu 20.04
+    1. You might just want to try manually installing everything (manual install details at the bottom)
+    2. (Recommended) Install [virtualbox](https://www.virtualbox.org/wiki/Downloads) and setup Ubuntu 18.04 or Ubuntu 20.04
         - Here's [a 10 min tutorial](https://youtu.be/QbmRXJJKsvs?t=62) showing all the steps
         - Once its installed, open up the Ubuntu terminal app and follow the linux instructions below
-    2. Get WSL2 with Ubuntu, and use Xming
+    3. Get WSL2 with Ubuntu, and use Xming
         - [Video for installing WSL2](https://www.youtube.com/watch?v=8PSXKU6fHp8)
         - If you're not familiar with WSL, I'd recommend [watching a quick thing on it like this one](https://youtu.be/av0UQy6g2FA?t=91)
         - [Guide for Using Xming with WSL2](https://memotut.com/en/ab0ecee4400f70f3bd09/)
