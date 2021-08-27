@@ -13,4 +13,9 @@ All the setup instructions inside `documentation/SETUP.md`
 
 # What commands are there?
 
-As soon as you run the setup, it will show you all the main commands, but here's a quick overview. `run pacman` and `run autograder` will be the most common, and both are just a wrapper calling `cd ./main;python pacman.py` or `cd ./main;python autograder.py` so you can run them manually if you want.
+As soon as you run the start command (from `documentation/SETUP.md`), it will list all the project commands. But here's a quick overview anyways.
+- `run pacman`
+- `run autograder`
+- `project pacman_examples`
+
+Many of these commands are simple wrappers like `cd ./main;python pacman.py`. You're free to run the python directly if desired.
