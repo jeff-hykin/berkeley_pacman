@@ -2,10 +2,10 @@
 
 (If you have problems, follow the Auto installation)
 Install:
-    - git
-    - Python 3.8
-    - then `cd` into the `./main` folder and you'll be ready to run code
-    - `python autograder.py`, `python pacman.py`, `python pacman.py --help` and take a look at `./commmands/project/pacman_examples` to see different options for argument
+- git
+- Python 3.8
+- then `cd` into the `./main` folder and you'll be ready to run code
+- `python autograder.py`, `python pacman.py`, `python pacman.py --help` and take a look at `./commmands/project/pacman_examples` to see different options for argument
 
 # Auto Installation
 
