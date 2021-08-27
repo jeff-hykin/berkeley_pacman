@@ -19,7 +19,7 @@ All the setup instructions inside `documentation/SETUP.md`
 
 # What commands are there?
 
-As soon as you run the start command (from `documentation/SETUP.md`), it will list all the project commands. But here's a quick overview anyways.
+As soon as you run the start command (from the auto setup in `documentation/SETUP.md`), it will list all the project commands. But here's a quick overview anyways.
 - `run pacman`
 - `run autograder`
 - `project pacman_examples`
