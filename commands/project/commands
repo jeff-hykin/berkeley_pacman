@@ -1,9 +1,16 @@
 #!/usr/bin/env bash
+blue="\e[0;94m"
+color_reset="\e[0m"
     echo "commands:"
     echo "    project"
-    tree "$PROJECTR_COMMANDS_FOLDER/project" -C --dirsfirst -A -F --noreport | sed 's/^/        /' | sed -E 's/(\*|@)$/ /' | sed "1d"
+    tree "$PROJECTR_COMMANDS_FOLDER/project" -C --dirsfirst -A -F --noreport | sed 's/^/     /' | sed -E 's/(\*|@)$/ /' | sed "1d"
+    echo "    run"
+    tree "$PROJECTR_COMMANDS_FOLDER/run" -C --dirsfirst -A -F --noreport | sed 's/^/     /' | sed -E 's/(\*|@)$/ /' | sed "1d"
     echo 
-    echo "examples:"
-    echo "    project clean"
+    echo "example commands:"
+    printf "$blue"
+    echo "    run autograder"
+    echo "    run pacman"
     echo "    project commands"
+    printf "$color_reset"
     

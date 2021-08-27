@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+echo '
+more examples!
+    run pacman
+    run pacman --layout testMaze --pacman GoWestAgent
+    run pacman --layout tinyMaze --pacman GoWestAgent
+    run pacman -h
+    run pacman -l tinyMaze -p SearchAgent -a fn=tinyMazeSearch
+    run pacman -l tinyMaze -p SearchAgent
+    run pacman -l mediumMaze -p SearchAgent
+    run pacman -l bigMaze -z .5 -p SearchAgent
+    run pacman -l mediumMaze -p SearchAgent -a fn=bfs
+    run pacman -l bigMaze -p SearchAgent -a fn=bfs -z .5
+    run pacman -l mediumMaze -p SearchAgent -a fn=ucs
+    run pacman -l mediumDottedMaze -p StayEastSearchAgent
+    run pacman -l mediumScaryMaze -p StayWestSearchAgent
+    run pacman -l bigMaze -z .5 -p SearchAgent -a fn=astar,heuristic=manhattanHeuristic 
+    run pacman -l tinyCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
+    run pacman -l mediumCorners -p SearchAgent -a fn=bfs,prob=CornersProblem
+    run pacman -l mediumCorners -p AStarCornersAgent -z 0.5
+    run pacman -l testSearch -p AStarFoodSearchAgent
+    run pacman -l trickySearch -p AStarFoodSearchAgent
+    run pacman -l bigSearch -p ClosestDotSearchAgent -z .5 
+    run pacman -l bigSearch -p ApproximateSearchAgent -z .5 -q 
+'
