@@ -1,4 +1,5 @@
 # Manual Installation
+
 (If you have problems, follow the Auto installation)
 Install:
     - git
