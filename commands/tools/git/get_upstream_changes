@@ -38,4 +38,4 @@ git_mixin () {
     git remote remove "@__temp__" &>/dev/null
 }
 
-git_mixin "https://github.com/jeff-hykin/berkly_pacman.git" "master"
+git_mixin "https://github.com/jeff-hykin/berkeley_pacman.git" "master"
