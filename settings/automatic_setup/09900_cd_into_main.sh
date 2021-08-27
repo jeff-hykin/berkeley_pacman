@@ -1,0 +1,1 @@
+cd "$PROJECTR_FOLDER/main"

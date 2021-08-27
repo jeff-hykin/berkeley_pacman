@@ -1,8 +1,11 @@
+# What is this?
+- This is an updated version of the [Berkeley Pacman](http://ai.berkeley.edu/search.html) project (from python2 to python3). Its nearly 1-to-1 so you should be able to follow along with their general ideas.
+
 # How do I get this code to run?
 
-Please follow the install instructions inside `documentation/SETUP.md`!
+All the setup instructions inside `documentation/SETUP.md`
 
-# What should I modify?
+# What are the important files?
 
 - `main/` contains all the code, however you can ignore many of the python files
 - `main/search.py` is where all your search algorithms should be.
