@@ -1,3 +1,4 @@
+from __future__ import print_function
 # eightpuzzle.py
 # --------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -12,12 +13,16 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+from builtins import input
+from builtins import str
+from builtins import range
+from builtins import object
 import search
 import random
 
 # Module Classes
 
-class EightPuzzleState:
+class EightPuzzleState(object):
     """
     The Eight Puzzle is described in the course textbook on
     page 64.
@@ -133,7 +138,7 @@ class EightPuzzleState:
             newrow = row
             newcol = col + 1
         else:
-            raise "Illegal Move"
+            raise Exception('Illegal Move')
 
         # Create a copy of the current eightPuzzle
         newPuzzle = EightPuzzleState([0, 0, 0, 0, 0, 0, 0, 0, 0])
@@ -277,5 +282,5 @@ if __name__ == '__main__':
         print('After %d move%s: %s' % (i, ("", "s")[i>1], a))
         print(curr)
 
-        raw_input("Press return for the next state...")   # wait for key stroke
+        input("Press return for the next state...")   # wait for key stroke
         i += 1

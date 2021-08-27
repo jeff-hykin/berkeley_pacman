@@ -1,3 +1,4 @@
+from __future__ import print_function
 # autograder.py
 # -------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -85,8 +86,8 @@ def readCommand(argv):
 
 # confirm we should author solution files
 def confirmGenerate():
-    print 'WARNING: this action will overwrite any solution files.'
-    print 'Are you sure you want to proceed? (yes/no)'
+    print('WARNING: this action will overwrite any solution files.')
+    print('Are you sure you want to proceed? (yes/no)')
     while True:
         ans = sys.stdin.readline().strip()
         if ans == 'yes':
@@ -94,7 +95,7 @@ def confirmGenerate():
         elif ans == 'no':
             sys.exit(0)
         else:
-            print 'please answer either "yes" or "no"'
+            print('please answer either "yes" or "no"')
 
 
 # TODO: Fix this so that it tracebacks work correctly
@@ -126,7 +127,7 @@ def loadModuleString(moduleSource):
     #f = StringIO(moduleCodeDict[k])
     #tmp = imp.load_module(k, f, k, (".py", "r", imp.PY_SOURCE))
     tmp = imp.new_module(k)
-    exec moduleCodeDict[k] in tmp.__dict__
+    exec(moduleCodeDict[k], tmp.__dict__)
     setModuleName(tmp, k)
     return tmp
 
@@ -187,12 +188,12 @@ def splitStrings(d):
 
 def printTest(testDict, solutionDict):
     pp = pprint.PrettyPrinter(indent=4)
-    print "Test case:"
+    print("Test case:")
     for line in testDict["__raw_lines__"]:
-        print "   |", line
-    print "Solution:"
+        print("   |", line)
+    print("Solution:")
     for line in solutionDict["__raw_lines__"]:
-        print "   |", line
+        print("   |", line)
 
 
 def runTest(testName, moduleDict, printTestCase=False, display=None):
@@ -236,7 +237,7 @@ def getTestSubdirs(testParser, testRoot, questionToGrade):
     if questionToGrade != None:
         questions = getDepends(testParser, testRoot, questionToGrade)
         if len(questions) > 1:
-            print 'Note: due to dependencies, the following tests will be run: %s' % ' '.join(questions)
+            print('Note: due to dependencies, the following tests will be run: %s' % ' '.join(questions))
         return questions
     if 'order' in problemDict:
         return problemDict['order'].split()
@@ -269,8 +270,8 @@ def evaluate(generateSolutions, testRoot, moduleDict, exceptionMap=ERROR_HINT_MA
         questionDicts[q] = questionDict
 
         # load test cases into question
-        tests = filter(lambda t: re.match('[^#~.].*\.test\Z', t), os.listdir(subdir_path))
-        tests = map(lambda t: re.match('(.*)\.test\Z', t).group(1), tests)
+        tests = [t for t in os.listdir(subdir_path) if re.match('[^#~.].*\.test\Z', t)]
+        tests = [re.match('(.*)\.test\Z', t).group(1) for t in tests]
         for t in sorted(tests):
             test_file = os.path.join(subdir_path, '%s.test' % t)
             solution_file = os.path.join(subdir_path, '%s.solution' % t)

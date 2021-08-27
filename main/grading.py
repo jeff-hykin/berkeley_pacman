@@ -13,8 +13,12 @@
 
 
 "Common code for autograders"
+from __future__ import print_function
 
+from builtins import str
+from builtins import object
 import cgi
+import html
 import time
 import sys
 import json
@@ -23,7 +27,7 @@ import pdb
 from collections import defaultdict
 import util
 
-class Grades:
+class Grades(object):
   "A data structure for project grades, along with formatting code to display them"
   def __init__(self, projectName, questionsAndMaxesList,
                gsOutput=False, edxOutput=False, muteOutput=False):
@@ -46,7 +50,7 @@ class Grades:
     self.prereqs = defaultdict(set)
 
     #print 'Autograder transcript for %s' % self.project
-    print 'Starting on %d-%d at %d:%02d:%02d' % self.start
+    print('Starting on %d-%d at %d:%02d:%02d' % self.start)
 
   def addPrereq(self, question, prereq):
     self.prereqs[question].add(prereq)
@@ -59,25 +63,24 @@ class Grades:
 
     completedQuestions = set([])
     for q in self.questions:
-      print '\nQuestion %s' % q
-      print '=' * (9 + len(q))
-      print
+      print('\nQuestion %s' % q)
+      print('=' * (9 + len(q)))
+      print()
       self.currentQuestion = q
 
       incompleted = self.prereqs[q].difference(completedQuestions)
       if len(incompleted) > 0:
           prereq = incompleted.pop()
-          print \
-"""*** NOTE: Make sure to complete Question %s before working on Question %s,
+          print("""*** NOTE: Make sure to complete Question %s before working on Question %s,
 *** because Question %s builds upon your answer for Question %s.
-""" % (prereq, q, q, prereq)
+""" % (prereq, q, q, prereq))
           continue
 
       if self.mute: util.mutePrint()
       try:
         util.TimeoutFunction(getattr(gradingModule, q),1800)(self) # Call the question's function
         #TimeoutFunction(getattr(gradingModule, q),1200)(self) # Call the question's function
-      except Exception, inst:
+      except Exception as inst:
         self.addExceptionMessage(q, inst, traceback)
         self.addErrorHints(exceptionMap, inst, q[1])
       except:
@@ -88,18 +91,18 @@ class Grades:
       if self.points[q] >= self.maxes[q]:
         completedQuestions.add(q)
 
-      print '\n### Question %s: %d/%d ###\n' % (q, self.points[q], self.maxes[q])
+      print('\n### Question %s: %d/%d ###\n' % (q, self.points[q], self.maxes[q]))
 
 
-    print '\nFinished at %d:%02d:%02d' % time.localtime()[3:6]
-    print "\nProvisional grades\n=================="
+    print('\nFinished at %d:%02d:%02d' % time.localtime()[3:6])
+    print("\nProvisional grades\n==================")
 
     for q in self.questions:
-      print 'Question %s: %d/%d' % (q, self.points[q], self.maxes[q])
-    print '------------------'
-    print 'Total: %d/%d' % (self.points.totalCount(), sum(self.maxes.values()))
+      print('Question %s: %d/%d' % (q, self.points[q], self.maxes[q]))
+    print('------------------')
+    print('Total: %d/%d' % (self.points.totalCount(), sum(self.maxes.values())))
     if bonusPic and self.points.totalCount() == 25:
-      print """
+      print("""
 
                      ALL HAIL GRANDPAC.
               LONG LIVE THE GHOSTBUSTING KING.
@@ -130,11 +133,11 @@ class Grades:
                 @@@@@@@@@@@@@@@@@@@@@@@@@@
                     @@@@@@@@@@@@@@@@@@
 
-"""
-    print """
+""")
+    print("""
 Your grades are NOT yet registered.  To register your grades, make sure
 to follow your instructor's guidelines to receive credit on your project.
-"""
+""")
 
     if self.edxOutput:
         self.produceOutput()
@@ -289,13 +292,13 @@ to follow your instructor's guidelines to receive credit on your project.
     if not raw:
         # We assume raw messages, formatted for HTML, are printed separately
         if self.mute: util.unmutePrint()
-        print '*** ' + message
+        print('*** ' + message)
         if self.mute: util.mutePrint()
-        message = cgi.escape(message)
+        message = html.escape(message)
     self.messages[self.currentQuestion].append(message)
 
   def addMessageToEmail(self, message):
-    print "WARNING**** addMessageToEmail is deprecated %s" % message
+    print("WARNING**** addMessageToEmail is deprecated %s" % message)
     for line in message.split('\n'):
       pass
       #print '%%% ' + line + ' %%%'

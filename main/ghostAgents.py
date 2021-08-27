@@ -1,3 +1,4 @@
+from __future__ import division
 # ghostAgents.py
 # --------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -12,6 +13,8 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+from builtins import zip
+from past.utils import old_div
 from game import Agent
 from game import Actions
 from game import Directions
@@ -75,7 +78,7 @@ class DirectionalGhost( GhostAgent ):
 
         # Construct distribution
         dist = util.Counter()
-        for a in bestActions: dist[a] = bestProb / len(bestActions)
-        for a in legalActions: dist[a] += ( 1-bestProb ) / len(legalActions)
+        for a in bestActions: dist[a] = old_div(bestProb, len(bestActions))
+        for a in legalActions: dist[a] += old_div(( 1-bestProb ), len(legalActions))
         dist.normalize()
         return dist

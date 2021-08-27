@@ -39,6 +39,12 @@ code to run a game.  This file is divided into three sections:
 To play your first game, type 'python pacman.py' from the command line.
 The keys are 'a', 's', 'd', and 'w' to move (or arrow keys).  Have fun!
 """
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import range
+from builtins import object
 from game import GameStateData
 from game import Game
 from game import Directions
@@ -52,7 +58,7 @@ import sys, types, time, random, os
 # YOUR INTERFACE TO THE PACMAN WORLD: A GameState #
 ###################################################
 
-class GameState:
+class GameState(object):
     """
     A GameState specifies the full game state, including the food, capsules,
     agent configurations and score changes.
@@ -263,7 +269,7 @@ SCARED_TIME = 40    # Moves ghosts are scared
 COLLISION_TOLERANCE = 0.7 # How close ghosts must be to Pacman to kill
 TIME_PENALTY = 1 # Number of points lost each round
 
-class ClassicGameRules:
+class ClassicGameRules(object):
     """
     These game rules manage the control flow of a game, deciding when
     and how the game starts and ends.
@@ -289,11 +295,11 @@ class ClassicGameRules:
         if state.isLose(): self.lose(state, game)
 
     def win( self, state, game ):
-        if not self.quiet: print "Pacman emerges victorious! Score: %d" % state.data.score
+        if not self.quiet: print("Pacman emerges victorious! Score: %d" % state.data.score)
         game.gameOver = True
 
     def lose( self, state, game ):
-        if not self.quiet: print "Pacman died! Score: %d" % state.data.score
+        if not self.quiet: print("Pacman died! Score: %d" % state.data.score)
         game.gameOver = True
 
     def getProgress(self, game):
@@ -301,9 +307,9 @@ class ClassicGameRules:
 
     def agentCrash(self, game, agentIndex):
         if agentIndex == 0:
-            print "Pacman crashed"
+            print("Pacman crashed")
         else:
-            print "A ghost crashed"
+            print("A ghost crashed")
 
     def getMaxTotalTime(self, agentIndex):
         return self.timeout
@@ -320,7 +326,7 @@ class ClassicGameRules:
     def getMaxTimeWarnings(self, agentIndex):
         return 0
 
-class PacmanRules:
+class PacmanRules(object):
     """
     These functions govern how pacman interacts with his environment under
     the classic game rules.
@@ -378,7 +384,7 @@ class PacmanRules:
                 state.data.agentStates[index].scaredTimer = SCARED_TIME
     consume = staticmethod( consume )
 
-class GhostRules:
+class GhostRules(object):
     """
     These functions dictate how ghosts interact with their environment.
     """
@@ -573,10 +579,10 @@ def readCommand( argv ):
 
     # Special case: recorded games don't use the runGames method or args structure
     if options.gameToReplay != None:
-        print 'Replaying recorded game %s.' % options.gameToReplay
-        import cPickle
+        print('Replaying recorded game %s.' % options.gameToReplay)
+        import pickle
         f = open(options.gameToReplay)
-        try: recorded = cPickle.load(f)
+        try: recorded = pickle.load(f)
         finally: f.close()
         recorded['display'] = args['display']
         replayGame(**recorded)
@@ -647,21 +653,21 @@ def runGames( layout, pacman, ghosts, display, numGames, record, numTraining = 0
         if not beQuiet: games.append(game)
 
         if record:
-            import time, cPickle
+            import time, pickle
             fname = ('recorded-game-%d' % (i + 1)) +  '-'.join([str(t) for t in time.localtime()[1:6]])
             f = file(fname, 'w')
             components = {'layout': layout, 'actions': game.moveHistory}
-            cPickle.dump(components, f)
+            pickle.dump(components, f)
             f.close()
 
     if (numGames-numTraining) > 0:
         scores = [game.state.getScore() for game in games]
         wins = [game.state.isWin() for game in games]
         winRate = wins.count(True)/ float(len(wins))
-        print 'Average Score:', sum(scores) / float(len(scores))
-        print 'Scores:       ', ', '.join([str(score) for score in scores])
-        print 'Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate)
-        print 'Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins])
+        print('Average Score:', sum(scores) / float(len(scores)))
+        print('Scores:       ', ', '.join([str(score) for score in scores]))
+        print('Win Rate:      %d/%d (%.2f)' % (wins.count(True), len(wins), winRate))
+        print('Record:       ', ', '.join([ ['Loss', 'Win'][int(w)] for w in wins]))
 
     return games
 

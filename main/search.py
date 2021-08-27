@@ -17,9 +17,10 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
+from builtins import object
 import util
 
-class SearchProblem:
+class SearchProblem(object):
     """
     This class outlines the structure of a search problem, but doesn't implement
     any of the methods (in object-oriented terminology: an abstract class).

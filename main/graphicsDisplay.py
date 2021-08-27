@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import print_function
 # graphicsDisplay.py
 # ------------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -12,6 +14,11 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
+from builtins import map
+from builtins import zip
+from builtins import range
+from builtins import object
+from past.utils import old_div
 from graphicsUtils import *
 import math, time
 from game import Directions
@@ -58,7 +65,7 @@ GHOST_SHAPE = [
 GHOST_SIZE = 0.65
 SCARED_COLOR = formatColor(1,1,1)
 
-GHOST_VEC_COLORS = map(colorToVector, GHOST_COLORS)
+GHOST_VEC_COLORS = list(map(colorToVector, GHOST_COLORS))
 
 PACMAN_COLOR = formatColor(255.0/255.0,255.0/255.0,61.0/255)
 PACMAN_SCALE = 0.5
@@ -79,7 +86,7 @@ CAPSULE_SIZE = 0.25
 # Drawing walls
 WALL_RADIUS = 0.15
 
-class InfoPane:
+class InfoPane(object):
     def __init__(self, layout, gridSize):
         self.gridSize = gridSize
         self.width = (layout.width) * gridSize
@@ -115,7 +122,7 @@ class InfoPane:
             size = 10
 
         for i, d in enumerate(distances):
-            t = text( self.toScreen(self.width/2 + self.width/8 * i, 0), GHOST_COLORS[i+1], d, "Times", size, "bold")
+            t = text( self.toScreen(old_div(self.width,2) + old_div(self.width,8) * i, 0), GHOST_COLORS[i+1], d, "Times", size, "bold")
             self.ghostDistanceText.append(t)
 
     def updateScore(self, score):
@@ -152,7 +159,7 @@ class InfoPane:
         pass
 
 
-class PacmanGraphics:
+class PacmanGraphics(object):
     def __init__(self, zoom=1.0, frameTime=0.0, capture=False):
         self.have_window = 0
         self.currentGhostImages = {}
@@ -288,7 +295,7 @@ class PacmanGraphics:
         pos = x - int(x) + y - int(y)
         width = 30 + 80 * math.sin(math.pi* pos)
 
-        delta = width / 2
+        delta = old_div(width, 2)
         if (direction == 'West'):
             endpoints = (180+delta, 180-delta)
         elif (direction == 'North'):
@@ -308,7 +315,7 @@ class PacmanGraphics:
 
     def animatePacman(self, pacman, prevPacman, image):
         if self.frameTime < 0:
-            print 'Press any key to step forward, "q" to play'
+            print('Press any key to step forward, "q" to play')
             keys = wait_for_keys()
             if 'q' in keys:
                 self.frameTime = 0.1
@@ -318,10 +325,10 @@ class PacmanGraphics:
             px, py = self.getPosition(pacman)
             frames = 4.0
             for i in range(1,int(frames) + 1):
-                pos = px*i/frames + fx*(frames-i)/frames, py*i/frames + fy*(frames-i)/frames
+                pos = old_div(px*i,frames) + old_div(fx*(frames-i),frames), old_div(py*i,frames) + old_div(fy*(frames-i),frames)
                 self.movePacman(pos, self.getDirection(pacman), image)
                 refresh()
-                sleep(abs(self.frameTime) / frames)
+                sleep(old_div(abs(self.frameTime), frames))
         else:
             self.movePacman(self.getPosition(pacman), self.getDirection(pacman), image)
         refresh()
@@ -589,7 +596,7 @@ class PacmanGraphics:
     def updateDistributions(self, distributions):
         "Draws an agent's belief distributions"
         # copy all distributions so we don't change their state
-        distributions = map(lambda x: x.copy(), distributions)
+        distributions = [x.copy() for x in distributions]
         if self.distributionImages == None:
             self.drawDistributions(self.previousState)
         for x in range(len(self.distributionImages)):
