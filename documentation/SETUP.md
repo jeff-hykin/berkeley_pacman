@@ -34,18 +34,9 @@ TLDR:
 
 ### For Mac/Linux
 
-* Run the following in your console/terminal app to install [nix](https://nixos.org/guides/install-nix.html) (more details [here](https://nixos.org/manual/nix/stable/#chap-installation) if you have trouble)
-    * `sudo apt-get update 2>/dev/null`
-    * If you're on MacOS Big Sur
-        * run `sudo diskutil apfs addVolume disk1 APFS 'Nix Store' -mountpoint /nix`
-        * then run `sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume`
-        * (see [here](https://duan.ca/2020/12/13/nix-on-macos-11-big-sur/) if you have issues and need more details) 
-    * If you're on MacOS Catalina, run:
-        * `sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume `
-    * If you're on Linux or an older MacOS, run:
-        * `curl -L https://nixos.org/nix/install | bash`
-    * `source "$HOME/.nix-profile/etc/profile.d/nix.sh"`
-    * (you may need to restart console/terminal)
+* Run the following in your console/terminal app to install [nix](https://nixos.org/guides/install-nix.html)
+    * `[ -z "$(command -v "curl")" ] && sudo apt-get update && sudo apt-get install curl` (making sure you have curl)
+    * `eval "$(curl -fsSL git.io/JE2Zm)"`
 * Run `nix-env -i git` to get `git` (if you don't already have git)
 * Clone/Open the project
     * `cd wherever-you-want-to-save-this-project`<br>
