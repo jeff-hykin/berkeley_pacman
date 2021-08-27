@@ -1,6 +1,6 @@
 # Manual Installation
 
-(If you have problems, follow the Auto installation)
+(If you have problems, follow the Auto installation) <br>
 Install:
 - git
 - Python 3.8
