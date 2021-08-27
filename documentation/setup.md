@@ -40,8 +40,8 @@ TLDR:
 * Run `nix-env -i git` to get `git` (if you don't already have git)
 * Clone/Open the project
     * `cd wherever-you-want-to-save-this-project`<br>
-    * `git clone https://github.com/*this-repo-url*`
-    * `cd *this-repo*`
+    * `git clone https://github.com/jeff-hykin/berkeley_pacman.git`
+    * `cd berkeley_pacman`
 * Actually run some code
     * run `commands/start` to get into the project environment
         * Note: this will almost certainly take a while the first time because it will auto-install exact versions of everything: `bash`, `grep`, `python`, all pip modules, etc

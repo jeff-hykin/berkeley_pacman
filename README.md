@@ -5,7 +5,7 @@
 
 # How do I get this code to run?
 
-All the setup instructions inside `documentation/SETUP.md`
+All the setup instructions inside [documentation/setup.md](https://github.com/jeff-hykin/berkeley_pacman/blob/master/documentation/setup.md)
 
 <br>
 
@@ -19,7 +19,7 @@ All the setup instructions inside `documentation/SETUP.md`
 
 # What commands are there?
 
-As soon as you run the start command (from the auto setup in `documentation/SETUP.md`), it will list all the project commands. But here's a quick overview anyways.
+As soon as you run the start command (from the auto setup in `documentation/setup.md`), it will list all the project commands. But here's a quick overview anyways.
 - `run pacman`
 - `run autograder`
 - `project pacman_examples`
