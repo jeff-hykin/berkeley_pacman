@@ -22,7 +22,7 @@ TLDR:
     1. You might just want to try manually installing everything (manual install details at the bottom)
     2. (Recommended) Install [virtualbox](https://www.virtualbox.org/wiki/Downloads) and setup Ubuntu 18.04 or Ubuntu 20.04
         - Here's [a 10 min tutorial](https://youtu.be/QbmRXJJKsvs?t=62) showing all the steps
-        - Once its installed, open up the Ubuntu terminal app and follow the linux instructions below
+        - Once its installed, boot up the Ubuntu machine, open the terminal/console app and follow the Linux instructions below
     3. Get WSL2 with Ubuntu, and use Xming
         - [Video for installing WSL2](https://www.youtube.com/watch?v=8PSXKU6fHp8)
         - If you're not familiar with WSL, I'd recommend [watching a quick thing on it like this one](https://youtu.be/av0UQy6g2FA?t=91)
