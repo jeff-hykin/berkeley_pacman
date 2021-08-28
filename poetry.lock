@@ -1,8 +1,17 @@
-package = []
+[[package]]
+name = "future"
+version = "0.18.2"
+description = "Clean single-source support for Python 3 and 2"
+category = "main"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<3.10"
-content-hash = "9bb64c4e388b0212ca6b8957dad730f771ae51e0d85efdda14e1fb74502c012e"
+content-hash = "4a6134c5bf457e7527057caa80e0849971befbaf73220dacd72c9c5b70331959"
 
 [metadata.files]
+future = [
+    {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
+]
