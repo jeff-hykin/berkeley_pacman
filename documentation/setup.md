@@ -19,8 +19,8 @@ TLDR:
 
 ### For Windows
 
-* Normally you just install [WSL](https://youtu.be/av0UQy6g2FA?t=91) and everything works, however the project uses a GUI and WSL doesn't like GUI's. <br>So there are a few options:
-    1. You might just want to try manually installing everything (manual install details at the bottom)
+* Normally you just install [WSL](https://youtu.be/av0UQy6g2FA?t=91) and follow the linux commands, however the project uses a GUI and WSL doesn't like GUI's. <br>So there are a few options:
+    1. You might just want to try manually installing everything (manual install details at the top)
     2. (Recommended) Install [virtualbox](https://www.virtualbox.org/wiki/Downloads) and setup Ubuntu 18.04 or Ubuntu 20.04
         - Here's [a 10 min tutorial](https://youtu.be/QbmRXJJKsvs?t=62) showing all the steps
         - Once its installed, boot up the Ubuntu machine, open the terminal/console app and follow the Linux instructions below
