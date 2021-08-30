@@ -36,8 +36,8 @@ TLDR:
 ### For Mac/Linux
 
 * Run the following in your console/terminal app to install [nix](https://nixos.org/guides/install-nix.html)
-    * `[ -z "$(command -v "curl")" ] && sudo apt-get update && sudo apt-get install curl` (making sure you have curl)
-    * `eval "$(curl -fsSL git.io/JE2Zm)"`
+    * making sure you have curl: `[ -z "$(command -v "curl")" ] && sudo apt-get update && sudo apt-get install curl`
+    * installing nix: `eval "$(curl -fsSL git.io/JE2Zm)"`
 * Run `nix-env -i git` to get `git` (if you don't already have git)
 * Clone/Open the project
     * `cd wherever-you-want-to-save-this-project`<br>
