@@ -2,7 +2,7 @@
 
 inside_wsl=""
 # check if file exists
-if [ -f "$PROJECTR_FOLDER/settings/.cache/env_is_inside_wsl" ]
+if [ -f "$FORNIX_FOLDER/settings/.cache/env_is_inside_wsl" ]
 then
     inside_wsl="true"
 fi
@@ -10,7 +10,7 @@ fi
 if [ -n "$WSL_DISTRO_NAME" ]
 then
     inside_wsl="true"
-    touch "$PROJECTR_FOLDER/settings/.cache/env_is_inside_wsl"
+    touch "$FORNIX_FOLDER/settings/.cache/env_is_inside_wsl"
 fi
 
 
