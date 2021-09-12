@@ -35,7 +35,7 @@ TLDR:
 
 ### For Mac/Linux
 
-* Just run `eval "$(curl -fsSL git.io/JE2Zm || wget -qO- git.io/JE2Zm)"` in your console/terminal app
+* Just run `eval "$(curl -fsSL git.io/JE2Zm || wget -qO- git.io/JE2Zm)" https://github.com/jeff-hykin/berkeley_pacman` in your console/terminal app
     - If you're running a *really* barebones Linux that somehow doesn't have either `curl` or `wget`, install curl or wget and rerun the command
     - This will install nixpkg and interactively help clone/setup this repo
     - If you don't want to run a random internet script (and you *should* always be skeptical of excuting random code!) then
