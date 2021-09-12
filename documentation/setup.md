@@ -11,8 +11,9 @@ Install:
 # Auto Installation
 
 TLDR:
-- install nix
-- run `commands/start` (which uses nix to install everything)
+- pick where to save the project
+- run a script 
+- done
 - \* some extra work if you have Windows
 
 <br>
@@ -35,7 +36,7 @@ TLDR:
 
 ### For Mac/Linux
 
-* Just run `eval "$(curl -fsSL git.io/JE2Zm || wget -qO- git.io/JE2Zm)" https://github.com/jeff-hykin/berkeley_pacman` in your console/terminal app
+* Just run `eval "$(curl -fsSL git.io/JE2Zm || wget -qO- git.io/JE2Zm)"` in your console/terminal app
     - If you're running a *really* barebones Linux that somehow doesn't have either `curl` or `wget`, install curl or wget and rerun the command
     - This will install nixpkg and interactively help clone/setup this repo
     - If you don't want to run a random internet script (and you *should* always be skeptical of excuting random code!) then
@@ -46,6 +47,7 @@ TLDR:
         - `commands/start`
         - (That comand should explain everything else about the project)
 
-* After the intial setup, run the following to get back into the project environment
-    - `cd wherever-you-just-cloned-the-repository`
+
+After you've finished working and close the terminal, you can always return to project environment by doing
+    - `cd wherever-you-put-the-project`
     - `commands/start`
