@@ -4,6 +4,8 @@ more examples!
     run pacman
     run pacman --layout testMaze --pacman GoWestAgent
     run pacman --layout tinyMaze --pacman GoWestAgent
+    run pacman --layout tinyMaze -p SearchAgent -a fn=depthFirstSearch
+    run pacman --layout tinyMaze -p SearchAgent -a fn=uniformCostSearch
     run pacman -h
     run pacman -l tinyMaze -p SearchAgent -a fn=tinyMazeSearch
     run pacman -l tinyMaze -p SearchAgent
