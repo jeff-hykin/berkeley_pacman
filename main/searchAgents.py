@@ -46,6 +46,7 @@ import time
 import search
 
 
+# this is like a "hello world" example of an agent
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
 
