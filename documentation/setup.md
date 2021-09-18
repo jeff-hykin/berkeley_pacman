@@ -9,7 +9,7 @@ Install:
 - some example commands: `python autograder.py`, `python pacman.py`, `python pacman.py --help`. You can also look at `./commmands/project/pacman_examples` to see different options for arguments.
 
 
-# Project Environment / Automated Setup
+# Project Environment (Alternative to Manual Setup)
 
 ### If you're an Experienced/Senior Dev
 
