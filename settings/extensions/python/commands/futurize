@@ -1,0 +1,4 @@
+# TMPDIR fixes a pip issue
+
+# use the futureize
+"$FORNIX_FOLDER/.venv/bin/futurize" --write "$@"

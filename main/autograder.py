@@ -32,27 +32,6 @@ except:
 
 # register arguments and set default values
 def readCommand(argv):
-    # 
-    # select project
-    # 
-    which_tests = None
-    if len(argv) > 1 and isinstance(argv[1], str) and argv[1][0:2] != "--":
-        which_tests = argv.pop(1)
-    if which_tests in choices.keys():
-        projectParams = choices[which_tests]
-    else:
-        options = list(choices.keys())
-        argv.insert(1, options[0])
-        example = " ".join(argv)
-        print(f'=Error=====================================================')
-        print(f'      When calling autograder.py')
-        print(f'      please set the first argument to be one of these:')
-        print(f'          {options}')
-        print(f'      ex:')
-        print(f'          python {example}')
-        print(f'===========================================================')
-        exit(1)
-    
     parser = optparse.OptionParser(description="Run public tests on student code")
     parser.set_defaults(
         generateSolutions=False,
@@ -65,7 +44,7 @@ def readCommand(argv):
     parser.add_option(
         "--test-directory",
         dest="testRoot",
-        default="test_cases",
+        default=projectParams["TEST_CASES"],
         help="Root test directory which contains subdirectories corresponding to each question",
     )
     parser.add_option(
@@ -427,7 +406,29 @@ def getDisplay(graphicsByDefault, options=None):
 
 
 if __name__ == "__main__":
-    options = readCommand(sys.argv)
+    argv = sys.argv
+    # 
+    # select project
+    # 
+    which_tests = None
+    if len(argv) > 1 and isinstance(argv[1], str) and argv[1][0:2] != "--":
+        which_tests = argv.pop(1)
+    if which_tests in choices.keys():
+        projectParams = choices[which_tests]
+    else:
+        options = list(choices.keys())
+        argv.insert(1, options[0])
+        example = " ".join(argv)
+        print(f'=Error=====================================================')
+        print(f'      When calling autograder.py')
+        print(f'      please set the first argument to be one of these:')
+        print(f'          {options}')
+        print(f'      ex:')
+        print(f'          python {example}')
+        print(f'===========================================================')
+        exit(1)
+    
+    options = readCommand(argv)
     if options.generateSolutions:
         confirmGenerate()
     codePaths = options.studentCode.split(",")

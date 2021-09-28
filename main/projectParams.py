@@ -18,11 +18,13 @@ choices = {
         "PROJECT_TEST_CLASSES" : "searchTestClasses.py",
         "PROJECT_NAME" : "Project 1: Search",
         "BONUS_PIC" : False,
+        "TEST_CASES": "search_agent_test_cases",
     },
     "multi_agent": {
         "STUDENT_CODE_DEFAULT" : 'multiAgents.py',
         "PROJECT_TEST_CLASSES" : 'multiagentTestClasses.py',
         "PROJECT_NAME" : 'Project 2: Multiagent search',
         "BONUS_PIC" : False,
+        "TEST_CASES": "multi_agent_test_cases",
     }
 }
