@@ -21,8 +21,8 @@ import optparse
 import os
 import re
 import sys
-import projectParams
 import random
+from projectParams import choices
 
 random.seed(0)
 try:
@@ -32,6 +32,27 @@ except:
 
 # register arguments and set default values
 def readCommand(argv):
+    # 
+    # select project
+    # 
+    which_tests = None
+    if len(argv) > 1 and isinstance(argv[1], str) and argv[1][0:2] != "--":
+        which_tests = argv.pop(1)
+    if which_tests in choices.keys():
+        projectParams = choices[which_tests]
+    else:
+        options = list(choices.keys())
+        argv.insert(1, options[0])
+        example = " ".join(argv)
+        print(f'=Error=====================================================')
+        print(f'      When calling autograder.py')
+        print(f'      please set the first argument to be one of these:')
+        print(f'          {options}')
+        print(f'      ex:')
+        print(f'          python {example}')
+        print(f'===========================================================')
+        exit(1)
+    
     parser = optparse.OptionParser(description="Run public tests on student code")
     parser.set_defaults(
         generateSolutions=False,
@@ -50,7 +71,7 @@ def readCommand(argv):
     parser.add_option(
         "--student-code",
         dest="studentCode",
-        default=projectParams.STUDENT_CODE_DEFAULT,
+        default=projectParams["STUDENT_CODE_DEFAULT"],
         help="comma separated list of student code files",
     )
     parser.add_option(
@@ -62,7 +83,7 @@ def readCommand(argv):
     parser.add_option(
         "--test-case-code",
         dest="testCaseCode",
-        default=projectParams.PROJECT_TEST_CLASSES,
+        default=projectParams["PROJECT_TEST_CLASSES"],
         help="class containing testClass classes for this project",
     )
     parser.add_option(
@@ -260,7 +281,7 @@ def runTest(testName, moduleDict, printTestCase=False, display=None):
         printTest(testDict, solutionDict)
 
     # This is a fragile hack to create a stub grades object
-    grades = grading.Grades(projectParams.PROJECT_NAME, [(None, 0)])
+    grades = grading.Grades(projectParams["PROJECT_NAME"], [(None, 0)])
     testCase.execute(grades, moduleDict, solutionDict)
 
 
@@ -374,7 +395,7 @@ def evaluate(
         questions.append((q, question.getMaxPoints()))
 
     grades = grading.Grades(
-        projectParams.PROJECT_NAME,
+        projectParams["PROJECT_NAME"],
         questions,
         gsOutput=gsOutput,
         edxOutput=edxOutput,
@@ -385,7 +406,7 @@ def evaluate(
             for prereq in questionDicts[q].get("depends", "").split():
                 grades.addPrereq(q, prereq)
 
-    grades.grade(sys.modules[__name__], bonusPic=projectParams.BONUS_PIC)
+    grades.grade(sys.modules[__name__], bonusPic=projectParams["BONUS_PIC"])
     return grades.points
 
 
