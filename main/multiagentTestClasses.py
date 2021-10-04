@@ -156,7 +156,7 @@ class GradingAgent(Agent):
         self.partialPlyBugActions = partialPlyBugActions
         # create fields for storing specific wrong actions
         self.suboptimalMoves = []
-        self.wrongStatesExplored = -1
+        self.wrongStatesExplored = False
         # boolean vectors represent types of implementation the student could have
         self.actionsConsistentWithOptimal = [True for i in range(len(optimalActions[0]))]
         self.actionsConsistentWithAlternativeDepth = [True for i in range(len(altDepthActions[0]))]
@@ -177,7 +177,7 @@ class GradingAgent(Agent):
         altDepthActions = self.altDepthActions[self.stepCount]
         partialPlyBugActions = self.partialPlyBugActions[self.stepCount]
         studentOptimalAction = False
-        curRightStatesExplored = False;
+        curRightStatesExplored = False
         for i in range(len(optimalActions)):
             if studentAction[0] in optimalActions[i][0]:
                 studentOptimalAction = True
@@ -185,8 +185,8 @@ class GradingAgent(Agent):
                 self.actionsConsistentWithOptimal[i] = False
             if studentAction[1] == int(optimalActions[i][1]):
                 curRightStatesExplored = True
-        if not curRightStatesExplored and self.wrongStatesExplored < 0:
-            self.wrongStatesExplored = 1
+        if not curRightStatesExplored:
+            self.wrongStatesExplored = True
         for i in range(len(altDepthActions)):
             if studentAction[0] not in altDepthActions[i]:
                 self.actionsConsistentWithAlternativeDepth[i] = False
@@ -201,9 +201,6 @@ class GradingAgent(Agent):
 
     def getSuboptimalMoves(self):
         return self.suboptimalMoves
-
-    def getWrongStatesExplored(self):
-        return self.wrongStatesExplored
 
     def checkFailure(self):
         """
@@ -326,7 +323,7 @@ class PacmanGameTreeTest(testClasses.TestCase):
         if code == 0:
             return self.testPass(grades)
         elif code == -3:
-            if pac.getWrongStatesExplored() >=0:
+            if pac.wrongStatesExplored:
                 self.addMessage('Bug: Wrong number of states expanded.')
                 return self.testFail(grades)
             else:
