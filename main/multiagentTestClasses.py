@@ -152,6 +152,15 @@ class GradingAgent(Agent):
         # save student agent and actions of refernce agents
         self.studentAgent = studentAgent
         self.optimalActions = optimalActions
+        # create a set version 
+        self.optimal_actions = []
+        for each_action_set in optimalActions:
+            optimal_actions = set()
+            for each_list_of_actions, number_of_explored_states in each_action_set:
+                for each_action_name in each_list_of_actions:
+                    optimal_actions.add((each_action_name, number_of_explored_states))
+            self.optimal_actions.append(optimal_actions)
+            
         self.altDepthActions = altDepthActions
         self.partialPlyBugActions = partialPlyBugActions
         # create fields for storing specific wrong actions
@@ -164,6 +173,8 @@ class GradingAgent(Agent):
         # keep track of elapsed moves
         self.stepCount = 0
         self.seed = seed
+        self.student_actions = []
+        self.step_results = {}
 
     def registerInitialState(self, state):
         if 'registerInitialState' in dir(self.studentAgent):
@@ -172,35 +183,70 @@ class GradingAgent(Agent):
 
     def getAction(self, state):
         GameState.getAndResetExplored()
-        studentAction = (self.studentAgent.getAction(state), len(GameState.getAndResetExplored()))
+        student_action = (self.studentAgent.getAction(state), len(GameState.getAndResetExplored()))
         optimalActions = self.optimalActions[self.stepCount]
+        optimal_actions = self.optimal_actions[self.stepCount] # set of (action_name, number_of_explored_states) tuples
         altDepthActions = self.altDepthActions[self.stepCount]
         partialPlyBugActions = self.partialPlyBugActions[self.stepCount]
-        studentOptimalAction = False
-        curRightStatesExplored = False
-        for i in range(len(optimalActions)):
-            if studentAction[0] in optimalActions[i][0]:
-                studentOptimalAction = True
-            else:
-                self.actionsConsistentWithOptimal[i] = False
-            if studentAction[1] == int(optimalActions[i][1]):
-                curRightStatesExplored = True
-        if not curRightStatesExplored:
+        students_action_name_was_optimal = False
+        student_explored_correct_number_of_states = False
+        self.student_actions.append(student_action)
+        
+        # 
+        # compare taken action with optimal
+        # 
+        fully_correct = student_action in optimal_actions
+        # check possible partly-correct
+        if not fully_correct:
+            action_name, number_of_states_expanded = student_action
+            # check action correctness
+            students_action_name_was_optimal = any([
+                action_name == each_optimal_action for each_optimal_action, optimal_number_of_states_expanded in optimal_actions 
+            ])
+            # check explored_state correctness
+            student_explored_correct_number_of_states = any([
+                number_of_states_expanded == optimal_number_of_states_expanded for each_optimal_action, optimal_number_of_states_expanded in optimal_actions 
+            ])
+            # record what was wrong
+            self.step_results[self.stepCount] = {
+                "student_action": action_name,
+                "optimal action?": students_action_name_was_optimal,
+                "student_number_of_states_expanded": number_of_states_expanded,
+                "optimal number_of_states_expanded?": student_explored_correct_number_of_states,
+                "optimal combination?": fully_correct,
+                "student_combination": (action_name, number_of_states_expanded),
+                "possible/optimal combinations": optimal_actions,
+            }
+            
+        if not fully_correct and not student_explored_correct_number_of_states:
             self.wrongStatesExplored = True
         for i in range(len(altDepthActions)):
-            if studentAction[0] not in altDepthActions[i]:
+            if student_action[0] not in altDepthActions[i]:
                 self.actionsConsistentWithAlternativeDepth[i] = False
         for i in range(len(partialPlyBugActions)):
-            if studentAction[0] not in partialPlyBugActions[i]:
+            if student_action[0] not in partialPlyBugActions[i]:
                 self.actionsConsistentWithPartialPlyBug[i] = False
-        if not studentOptimalAction:
-            self.suboptimalMoves.append((state, studentAction[0], optimalActions[0][0][0]))
+        if not fully_correct and not students_action_name_was_optimal:
+            self.suboptimalMoves.append((state, student_action[0], optimalActions[0][0][0]))
         self.stepCount += 1
         random.seed(self.seed + self.stepCount)
         return optimalActions[0][0][0]
-
-    def getSuboptimalMoves(self):
-        return self.suboptimalMoves
+    
+    def print_incorrect_log(self, custom_print_function=print):
+        custom_print_function(f'(here are all the incorrect steps)')
+        for each_step_number, info in self.step_results.items():
+            custom_print_function(f'    step #{each_step_number}:')
+            for each_key, each_value in info.items():
+                if each_key == "possible/optimal combinations":
+                    custom_print_function(f'        {each_key}:')
+                    for each_combination in each_value:
+                        custom_print_function(f'            {each_combination}')
+                elif each_key == "student_combination":
+                    custom_print_function(f'        {each_key}:')
+                    custom_print_function(f'            {each_value}')
+                # basic message
+                else:
+                    custom_print_function(f'        {each_key}: {each_value}')
 
     def checkFailure(self):
         """
@@ -208,7 +254,7 @@ class GradingAgent(Agent):
         Return -1 if have only off by one depth moves.
         Return 0 otherwise.
         """
-        if self.wrongStatesExplored > 0:
+        if self.wrongStatesExplored:
             return -3
         if self.actionsConsistentWithOptimal.count(True) > 0:
             return 0
@@ -325,20 +371,23 @@ class PacmanGameTreeTest(testClasses.TestCase):
         elif code == -3:
             if pac.wrongStatesExplored:
                 self.addMessage('Bug: Wrong number of states expanded.')
+                pac.print_incorrect_log(self.addMessage)
                 return self.testFail(grades)
             else:
                 return self.testPass(grades)
         elif code == -2:
             self.addMessage('Bug: Partial Ply Bug')
+            pac.print_incorrect_log(self.addMessage)
             return self.testFail(grades)
         elif code == -1:
             self.addMessage('Bug: Search depth off by 1')
+            pac.print_incorrect_log(self.addMessage)
             return self.testFail(grades)
         elif code > 0:
-            moves = pac.getSuboptimalMoves()
+            moves = pac.suboptimalMoves
             state, studentMove, optMove = random.choice(moves)
             self.addMessage('Bug: Suboptimal moves')
-            self.addMessage('State:%s\nStudent Move:%s\nOptimal Move:%s' % (state, studentMove, optMove))
+            pac.print_incorrect_log(self.addMessage)
             return self.testFail(grades)
 
     def writeList(self, handle, name, list):

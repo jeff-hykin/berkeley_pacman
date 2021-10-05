@@ -9,7 +9,7 @@ color_reset="\e[0m"
     echo 
     echo "example commands:"
     printf "$blue"
-    echo "    run autograder"
+    echo "    run autograder search_agent"
     echo "    run pacman"
     echo "    project commands"
     printf "$color_reset"
