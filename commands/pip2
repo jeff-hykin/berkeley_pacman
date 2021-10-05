@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# summary
+    #
+
+VIRTUAL_ENV="$VIRTUAL_ENV2" PATH="$VIRTUAL_ENV2/bin:$PATH" python2 -m pip --disable-pip-version-check "$@"

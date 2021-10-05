@@ -1,7 +1,8 @@
 # TMPDIR fixes a pip issue
 export TMPDIR="$FORNIX_HOME/tmp.cleanable"
 mkdir -p "$TMPDIR"
-export VIRTUAL_ENV="$FORNIX_FOLDER/.venv"
+export VIRTUAL_ENV2="$FORNIX_FOLDER/.venv2"
+export VIRTUAL_ENV="$FORNIX_FOLDER/.venv3"
 export PATH="$VIRTUAL_ENV/bin:$PATH"
 if ! [ -d "$VIRTUAL_ENV" ]
 then
@@ -9,6 +10,7 @@ then
     # run the cleanup
     . "$FORNIX_FOLDER/settings/extensions/python/during_clean.sh"
     python -m venv "$VIRTUAL_ENV" && echo "virtual env created"
+    python2 -m virtualenv "$VIRTUAL_ENV2"
 fi
 
 # fix SSL issues
