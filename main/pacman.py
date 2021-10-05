@@ -132,8 +132,8 @@ class GameState(object):
         # Book keeping
         state.data._agentMoved = agentIndex
         state.data.score += state.data.scoreChange
-        GameState.explored.add(self)
-        GameState.explored.add(state)
+        GameState.explored.add(self.__hash__())
+        GameState.explored.add(state.__hash__())
         return state
 
     def getLegalPacmanActions(self):
@@ -253,7 +253,42 @@ class GameState(object):
         """
         Allows states to be keys of dictionaries.
         """
-        return hash(self.data)
+        hash_seperator = "|"
+        #
+        # Food Hash
+        #
+        
+        # no idea why this is the way it is
+        base = 1
+        food_hash = 0
+        for l in self.data.food.data:
+            for i in l:
+                if i:
+                    food_hash += base
+                base *= 2
+        food_hash = str(food_hash)
+        
+        # 
+        # agent states
+        # 
+        agent_state_hash = hash_seperator
+        for each in self.data.agentStates:
+            agent_state_hash += str(each.scaredTimer) + hash_seperator
+            agent_state_hash += str(each.configuration.pos) + hash_seperator
+            agent_state_hash += str(each.configuration.direction) + hash_seperator
+        
+        # 
+        # capsules
+        # 
+        capsules_hash = str(self.data.capsules)
+        
+        # 
+        # score
+        # 
+        score_hash = str(self.data.score)
+        
+        return food_hash + hash_seperator + agent_state_hash + hash_seperator + capsules_hash + hash_seperator + score_hash
+
 
     def __str__(self):
 

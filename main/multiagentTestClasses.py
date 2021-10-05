@@ -233,20 +233,20 @@ class GradingAgent(Agent):
         return optimalActions[0][0][0]
     
     def print_incorrect_log(self, custom_print_function=print):
-        custom_print_function(f'(here are all the incorrect steps)')
+        custom_print_function('(here are all the incorrect steps)')
         for each_step_number, info in self.step_results.items():
-            custom_print_function(f'    step #{each_step_number}:')
+            custom_print_function('    step #'+str(each_step_number)+':')
             for each_key, each_value in info.items():
                 if each_key == "possible/optimal combinations":
-                    custom_print_function(f'        {each_key}:')
+                    custom_print_function('        '+str(each_key)+':')
                     for each_combination in each_value:
-                        custom_print_function(f'            {each_combination}')
+                        custom_print_function('            '+str(each_combination)+'')
                 elif each_key == "student_combination":
-                    custom_print_function(f'        {each_key}:')
-                    custom_print_function(f'            {each_value}')
+                    custom_print_function('        '+str(each_key)+':')
+                    custom_print_function('            '+str(each_value)+'')
                 # basic message
                 else:
-                    custom_print_function(f'        {each_key}: {each_value}')
+                    custom_print_function('        '+str(each_key)+': '+str(each_value)+'')
 
     def checkFailure(self):
         """
