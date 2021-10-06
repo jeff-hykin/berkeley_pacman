@@ -540,6 +540,29 @@ class CornerProblemTest(testClasses.TestCase):
 #     f.write(template % (i+1, "\n".join(l)))
 #     f.close()
 
+def heuristic_error_message(current_heuristic, current_state, next_heuristic, next_state):
+    return """
+    problem with inconsistent heuristic
+    
+        The heuristic for the current state is: """+str(current_heuristic)+"""
+            current_state is: """+str(current_state)+"""
+        The heuristic for the next state is: """+str(next_heuristic)+"""
+            next_state is: """+str(next_state)+"""
+        
+        Full Explaination:
+            because there is a gap larger than 1.0 between the two 
+                e.g. """+str(current_heuristic)+""" - """+str(next_heuristic)+""" > 1
+            the heuristic is considered to be inconsistent
+            
+            definition of consistent:
+                 Formally, for every node N (current_state)
+                 and each successor P of N,
+                 the estimated cost of reaching the goal from N (current_state)
+                 is no greater than the step cost of getting to P (next_state)
+                 plus the estimated cost of reaching the goal from P
+            (the reason we're checking > 1, is because the cost to get to P from N is 1)
+    """
+        
 
 class HeuristicTest(testClasses.TestCase):
     def __init__(self, question, testDict):
@@ -561,27 +584,32 @@ class HeuristicTest(testClasses.TestCase):
         return problem, state, heuristic
 
     def checkHeuristic(self, heuristic, problem, state, solutionCost):
-        h0 = heuristic(state, problem)
+        current_state_heuristic = heuristic(state, problem)
 
         if solutionCost == 0:
-            if h0 == 0:
+            if current_state_heuristic == 0:
                 return True, ""
             else:
                 return False, "Heuristic failed H(goal) == 0 test"
 
-        if h0 < 0:
+        if current_state_heuristic < 0:
             return False, "Heuristic failed H >= 0 test"
-        if not h0 > 0:
-            return False, "Heuristic failed non-triviality test"
-        if not h0 <= solutionCost:
+        if not current_state_heuristic > 0:
+            return False, "Heuristic failed non-triviality (e.g. > 0) test"
+        if not current_state_heuristic <= solutionCost:
             return False, "Heuristic failed admissibility test"
 
-        for succ, action, stepCost in problem.getSuccessors(state):
-            h1 = heuristic(succ, problem)
-            if h1 < 0:
+        for each_successor, action, stepCost in problem.getSuccessors(state):
+            next_heuristic = heuristic(each_successor, problem)
+            if next_heuristic < 0:
                 return False, "Heuristic failed H >= 0 test"
-            if h0 - h1 > stepCost:
-                return False, "Heuristic failed consistency test"
+            if current_state_heuristic - next_heuristic > stepCost:
+                return False, heuristic_error_message(
+                    current_heuristic=current_state_heuristic,
+                    next_heuristic=next_heuristic,
+                    current_state=state,
+                    next_state=each_successor
+                )
 
         return True, ""
 
@@ -763,43 +791,64 @@ class CornerHeuristicSanity(testClasses.TestCase):
         game_state.initialize(lay, 0)
         problem = searchAgents.CornersProblem(game_state)
         start_state = problem.getStartState()
-        h0 = searchAgents.cornersHeuristic(start_state, problem)
-        succs = problem.getSuccessors(start_state)
+        start_state_heuristic = searchAgents.cornersHeuristic(start_state, problem)
+        successors = problem.getSuccessors(start_state)
+            
         # cornerConsistencyA
-        for succ in succs:
-            h1 = searchAgents.cornersHeuristic(succ[0], problem)
-            if h0 - h1 > 1:
-                grades.addMessage("FAIL: inconsistent heuristic")
+        for each_state, *_ in successors:
+            successor_heuristic = searchAgents.cornersHeuristic(each_state, problem)
+            if start_state_heuristic - successor_heuristic > 1:
+                grades.addMessage(heuristic_error_message(
+                    current_heuristic=start_state_heuristic,
+                    next_heuristic=successor_heuristic,
+                    current_state=start_state,
+                    next_state=each_state
+                ))
                 return False
         heuristic_cost = searchAgents.cornersHeuristic(start_state, problem)
         true_cost = float(solutionDict["cost"])
         # cornerNontrivial
         if heuristic_cost == 0:
             grades.addMessage("FAIL: must use non-trivial heuristic")
+            grades.addMessage("    aka: heuristic_cost == 0")
             return False
         # cornerAdmissible
         if heuristic_cost > true_cost:
             grades.addMessage("FAIL: Inadmissible heuristic")
+            grades.addMessage("     aka: heuristic_cost > true_cost")
             return False
         path = solutionDict["path"].split()
         states = followPath(path, problem)
         heuristics = []
         for state in states:
             heuristics.append(searchAgents.cornersHeuristic(state, problem))
-        for i in range(0, len(heuristics) - 1):
-            h0 = heuristics[i]
-            h1 = heuristics[i + 1]
+        
+        pairwise_heuristics = zip(heuristics[0:-1], heuristics[1:])
+        pairwise_states = zip(states[0:-1], states[1:])
+        for (current_heuristic, next_heuristic), (current_state, next_state) in zip(pairwise_heuristics, pairwise_states):
             # cornerConsistencyB
-            if h0 - h1 > 1:
-                grades.addMessage("FAIL: inconsistent heuristic")
+            if current_heuristic - next_heuristic > 1:
+                grades.addMessage(heuristic_error_message(
+                    current_heuristic=current_heuristic,
+                    next_heuristic=next_heuristic,
+                    current_state=current_state,
+                    next_state=next_state,
+                ))
                 return False
             # cornerPosH
-            if h0 < 0 or h1 < 0:
-                grades.addMessage("FAIL: non-positive heuristic")
+            if current_heuristic < 0:
+                grades.addMessage("FAIL: non-positive heuristic for state: "+str(current_state))
+                return False
+            if next_heuristic < 0:
+                grades.addMessage("FAIL: non-positive heuristic for state: "+str(next_state))
                 return False
         # cornerGoalH
-        if heuristics[len(heuristics) - 1] != 0:
-            grades.addMessage("FAIL: heuristic non-zero at goal")
+        if heuristics[-1] != 0:
+            grades.addMessage("")
+            grades.addMessage("FAIL: heuristic non-zero at goal state")
+            grades.addMessage("    heuristic: "+str(heuristics[-1]))
+            grades.addMessage("    goal state: "+str(states[-1]))
+            grades.addMessage("")
             return False
         grades.addMessage("PASS: heuristic value less than true cost at start state")
         return True
