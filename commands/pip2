@@ -3,4 +3,4 @@
 # summary
     # this only exists to wrap pip2 inside the .venv2
 
-VIRTUAL_ENV="$VIRTUAL_ENV2" PATH="$VIRTUAL_ENV2/bin:$PATH" python2 -m pip --disable-pip-version-check "$@"
+python2 -m pip --disable-pip-version-check "$@"
