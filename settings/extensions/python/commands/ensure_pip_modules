@@ -112,7 +112,17 @@ then
     __temp_var__hash_check_name="pip_modules"
     failed_check_command () {
         # what to do when node modules haven't been installed yet
-        python -m pip --disable-pip-version-check install -r "$__temp_var__file_to_watch"
+        
+        # if python3 exists
+        if [ -n "$(command -v "python3")" ]
+        then
+            python3 -m pip --disable-pip-version-check install -r "$__temp_var__file_to_watch"
+        fi
+        # if python2 exists
+        if [ -n "$(command -v "python2")" ]
+        then
+            python2 -m pip --disable-pip-version-check install -r "$__temp_var__file_to_watch"
+        fi
         # if successful
         if [ $? -eq 0 ] 
         then

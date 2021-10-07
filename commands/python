@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# summary
+    # this only exists to ensure python defaults to python3
+
+python3 "$@"
