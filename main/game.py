@@ -322,8 +322,12 @@ class Actions(object):
         Directions.WEST: (-1, 0),
         Directions.STOP: (0, 0),
     }
-
-    _directionsAsList = list(_directions.items())
+    # # Original line
+    # _directionsAsList = list(_directions.items())
+    # # Python3 value
+    # _directionsAsList = [('North', (0, 1)), ('South', (0, -1)), ('East', (1, 0)), ('West', (-1, 0)), ('Stop', (0, 0))]
+    # Python2 value
+    _directionsAsList = [('West', (-1, 0)), ('Stop', (0, 0)), ('East', (1, 0)), ('North', (0, 1)), ('South', (0, -1))]
 
     TOLERANCE = 0.001
 

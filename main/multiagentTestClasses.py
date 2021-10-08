@@ -1,4 +1,5 @@
 from __future__ import print_function
+from collections import OrderedDict
 # multiagentTestClasses.py
 # ------------------------
 # Licensing Information:  You are free to use or extend these projects for
@@ -159,6 +160,8 @@ class GradingAgent(Agent):
             for each_list_of_actions, number_of_explored_states in each_action_set:
                 for each_action_name in each_list_of_actions:
                     optimal_actions.add((each_action_name, number_of_explored_states))
+            optimal_actions = list(optimal_actions)
+            optimal_actions.sort()
             self.optimal_actions.append(optimal_actions)
             
         self.altDepthActions = altDepthActions
@@ -174,7 +177,7 @@ class GradingAgent(Agent):
         self.stepCount = 0
         self.seed = seed
         self.student_actions = []
-        self.step_results = {}
+        self.step_results = OrderedDict()
 
     def registerInitialState(self, state):
         if 'registerInitialState' in dir(self.studentAgent):
@@ -208,15 +211,15 @@ class GradingAgent(Agent):
                 number_of_states_expanded == optimal_number_of_states_expanded for each_optimal_action, optimal_number_of_states_expanded in optimal_actions 
             ])
             # record what was wrong
-            self.step_results[self.stepCount] = {
-                "student_action": action_name,
-                "optimal action?": students_action_name_was_optimal,
-                "student_number_of_states_expanded": number_of_states_expanded,
-                "optimal number_of_states_expanded?": student_explored_correct_number_of_states,
-                "optimal combination?": fully_correct,
-                "student_combination": (action_name, number_of_states_expanded),
-                "possible/optimal combinations": optimal_actions,
-            }
+            self.step_results[self.stepCount] = OrderedDict()
+            self.step_results[self.stepCount]["student_action"] =  action_name
+            self.step_results[self.stepCount]["optimal action?"] =  students_action_name_was_optimal
+            self.step_results[self.stepCount]["student_number_of_states_expanded"] =  number_of_states_expanded
+            self.step_results[self.stepCount]["optimal number_of_states_expanded?"] =  student_explored_correct_number_of_states
+            self.step_results[self.stepCount]["optimal combination?"] =  fully_correct
+            self.step_results[self.stepCount]["student_combination"] =  (action_name, number_of_states_expanded)
+            self.step_results[self.stepCount]["possible/optimal combinations"] =  optimal_actions
+            
             
         if not fully_correct and not student_explored_correct_number_of_states:
             self.wrongStatesExplored = True

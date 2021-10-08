@@ -96,11 +96,14 @@ class GameState(object):
         #        GameState.explored.add(self)
         if self.isWin() or self.isLose():
             return []
-
+        
+        actions = []
         if agentIndex == 0:  # Pacman is moving
-            return PacmanRules.getLegalActions(self)
+            actions = PacmanRules.getLegalActions(self)
         else:
-            return GhostRules.getLegalActions(self, agentIndex)
+            actions = GhostRules.getLegalActions(self, agentIndex)
+        # actions.sort()
+        return actions
 
     def generateSuccessor(self, agentIndex, action):
         """
@@ -299,6 +302,12 @@ class GameState(object):
         Creates an initial game state from a layout array (see layout.py).
         """
         self.data.initialize(layout, numGhostAgents)
+
+    def summary(self):
+        """
+        Allows states to be keys of dictionaries.
+        """
+        return """{ "score": """+str(self.data.score)+""", capsules: """+str(self.data.capsules)+""", food: """+str(self.data.food.data)+""", agent_states: """+str(["""{ position:"""+str(each.configuration.pos)+""", direction: """+str(each.configuration.direction)+""", scaredTimer: """+str(each.scaredTimer)+""" }""" for each in self.data.agentStates ])+"""}"""
 
 
 ############################################################################
