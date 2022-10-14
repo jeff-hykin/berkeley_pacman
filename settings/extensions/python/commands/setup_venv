@@ -3,25 +3,25 @@ export TMPDIR="$FORNIX_HOME/tmp.cleanable"
 mkdir -p "$TMPDIR"
 
 # if python2 exists
-if [ -n "$(command -v "python2")" ]
-then
-    export VIRTUAL_ENV2="$FORNIX_FOLDER/.venv2"
-    if [ -z "$PYTHONPATH2" ]
-    then
-        export PYTHONPATH2="$(PYTHONPATH="" nix-shell -p python2 python2Packages.setuptools python2Packages.pip python2Packages.virtualenv python2Packages.wheel -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/3f50332bc4913a56ad216ca01f5d0bd24277a6b2.tar.gz --run 'echo "$PYTHONPATH"')"
-    fi
-    if ! [ -d "$VIRTUAL_ENV2" ]
-    then
-        echo "creating virtual env for python2"
-        # run the cleanup
-        . "$FORNIX_FOLDER/settings/extensions/python/during_clean.sh"
-        # create the python2 pythonpath
-        PYTHONPATH="$PYTHONPATH2" python2 -m virtualenv "$VIRTUAL_ENV2" && echo "virtual env created for python2"
-        # aliases are for the pip install section
-        alias python2="$FORNIX_FOLDER/commands/python2"
-        alias pip2="$FORNIX_FOLDER/commands/pip2"
-    fi
-fi
+# if [ -n "$(command -v "python2")" ]
+# then
+#     export VIRTUAL_ENV2="$FORNIX_FOLDER/.venv2"
+#     if [ -z "$PYTHONPATH2" ]
+#     then
+#         export PYTHONPATH2="$(PYTHONPATH="" nix-shell -p python2 python2Packages.setuptools python2Packages.pip python2Packages.virtualenv python2Packages.wheel -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/c83e13315caadef275a5d074243c67503c558b3b.tar.gz --show-trace --run 'echo "$PYTHONPATH"')"
+#     fi
+#     if ! [ -d "$VIRTUAL_ENV2" ]
+#     then
+#         echo "creating virtual env for python2"
+#         # run the cleanup
+#         . "$FORNIX_FOLDER/settings/extensions/python/during_clean.sh"
+#         # create the python2 pythonpath
+#         PYTHONPATH="$PYTHONPATH2" python2 -m virtualenv "$VIRTUAL_ENV2" && echo "virtual env created for python2"
+#         # aliases are for the pip install section
+#         alias python2="$FORNIX_FOLDER/commands/python2"
+#         alias pip2="$FORNIX_FOLDER/commands/pip2"
+#     fi
+# fi
 
 # if python3 exists
 if [ -n "$(command -v "python3")" ]

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# summary
-    # this only exists to wrap pip2 inside the .venv2
-
-python2 -m pip --disable-pip-version-check "$@"

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# summary
-    # this only exists to wrap python2 inside the .venv2
-
-PYTHONPATH="$PYTHONPATH2" VIRTUAL_ENV="$VIRTUAL_ENV2" PATH="$VIRTUAL_ENV2/bin:$PATH" "$VIRTUAL_ENV2/bin/python2" "$@"
