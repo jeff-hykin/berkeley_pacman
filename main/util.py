@@ -47,7 +47,7 @@ import io
 
 class FixedRandom(object):
     def __init__(self):
-        fixedState = (
+        fixed_state = (
             3,
             (
                 2147483648,
@@ -679,7 +679,7 @@ class FixedRandom(object):
             None,
         )
         self.random = random.Random()
-        self.random.setstate(fixedState)
+        self.random.setstate(fixed_state)
 
 
 """
@@ -701,7 +701,7 @@ class Stack(object):
         "Pop the most recently pushed item from the stack"
         return self.list.pop()
 
-    def isEmpty(self):
+    def is_empty(self):
         "Returns true if the stack is empty"
         return len(self.list) == 0
 
@@ -723,7 +723,7 @@ class Queue(object):
         """
         return self.list.pop()
 
-    def isEmpty(self):
+    def is_empty(self):
         "Returns true if the queue is empty"
         return len(self.list) == 0
 
@@ -749,7 +749,7 @@ class PriorityQueue(object):
         (_, _, item) = heapq.heappop(self.heap)
         return item
 
-    def isEmpty(self):
+    def is_empty(self):
         return len(self.heap) == 0
 
     def update(self, item, priority):
@@ -776,17 +776,17 @@ class PriorityQueueWithFunction(PriorityQueue):
     extracts each item's priority.
     """
 
-    def __init__(self, priorityFunction):
-        "priorityFunction (item) -> priority"
-        self.priorityFunction = priorityFunction  # store the priority function
+    def __init__(self, priority_function):
+        "priority_function (item) -> priority"
+        self.priority_function = priority_function  # store the priority function
         PriorityQueue.__init__(self)  # super-class initializer
 
     def push(self, item):
         "Adds an item to the queue with priority from the priority function"
-        PriorityQueue.push(self, item, self.priorityFunction(item))
+        PriorityQueue.push(self, item, self.priority_function(item))
 
 
-def manhattanDistance(xy1, xy2):
+def manhattan_distance(xy1, xy2):
     "Returns the Manhattan distance between points xy1 and xy2"
     return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
 
@@ -843,12 +843,12 @@ class Counter(dict):
         self.setdefault(idx, 0)
         return dict.__getitem__(self, idx)
 
-    def incrementAll(self, keys, count):
+    def increment_all(self, keys, count):
         """
         Increments all elements of keys by the same count.
 
         >>> a = Counter()
-        >>> a.incrementAll(['one','two', 'three'], 1)
+        >>> a.increment_all(['one','two', 'three'], 1)
         >>> a['one']
         1
         >>> a['two']
@@ -857,7 +857,7 @@ class Counter(dict):
         for key in keys:
             self[key] += count
 
-    def argMax(self):
+    def arg_max(self):
         """
         Returns the key with the highest value.
         """
@@ -865,10 +865,10 @@ class Counter(dict):
             return None
         all = list(self.items())
         values = [x[1] for x in all]
-        maxIndex = values.index(max(values))
-        return all[maxIndex][0]
+        max_index = values.index(max(values))
+        return all[max_index][0]
 
-    def sortedKeys(self):
+    def sorted_keys(self):
         """
         Returns a list of keys sorted by their values.  Keys
         with the highest values will appear first.
@@ -877,15 +877,15 @@ class Counter(dict):
         >>> a['first'] = -2
         >>> a['second'] = 4
         >>> a['third'] = 1
-        >>> a.sortedKeys()
+        >>> a.sorted_keys()
         ['second', 'third', 'first']
         """
-        sortedItems = list(self.items())
+        sorted_items = list(self.items())
         compare = lambda x, y: sign(y[1] - x[1])
-        sortedItems.sort(cmp=compare)
-        return [x[0] for x in sortedItems]
+        sorted_items.sort(cmp=compare)
+        return [x[0] for x in sorted_items]
 
-    def totalCount(self):
+    def total_count(self):
         """
         Returns the sum of counts for all keys.
         """
@@ -898,13 +898,13 @@ class Counter(dict):
         will remain the same. Note that normalizing an empty
         Counter will result in an error.
         """
-        total = float(self.totalCount())
+        total = float(self.total_count())
         if total == 0:
             return
         for key in list(self.keys()):
             self[key] = old_div(self[key], total)
 
-    def divideAll(self, divisor):
+    def divide_all(self, divisor):
         """
         Divides all counts by divisor
         """
@@ -1015,51 +1015,51 @@ class Counter(dict):
         return addend
 
 
-def raiseNotDefined():
-    fileName = inspect.stack()[1][1]
+def raise_not_defined():
+    file_name = inspect.stack()[1][1]
     line = inspect.stack()[1][2]
     method = inspect.stack()[1][3]
 
-    print("*** Method not implemented: %s at line %s of %s" % (method, line, fileName))
+    print("*** Method not implemented: %s at line %s of %s" % (method, line, file_name))
     sys.exit(1)
 
 
-def normalize(vectorOrCounter):
+def normalize(vector_or_counter):
     """
     normalize a vector or counter by dividing each value by the sum of all values
     """
-    normalizedCounter = Counter()
-    if type(vectorOrCounter) == type(normalizedCounter):
-        counter = vectorOrCounter
-        total = float(counter.totalCount())
+    normalized_counter = Counter()
+    if type(vector_or_counter) == type(normalized_counter):
+        counter = vector_or_counter
+        total = float(counter.total_count())
         if total == 0:
             return counter
         for key in list(counter.keys()):
             value = counter[key]
-            normalizedCounter[key] = old_div(value, total)
-        return normalizedCounter
+            normalized_counter[key] = old_div(value, total)
+        return normalized_counter
     else:
-        vector = vectorOrCounter
+        vector = vector_or_counter
         s = float(sum(vector))
         if s == 0:
             return vector
         return [old_div(el, s) for el in vector]
 
 
-def nSample(distribution, values, n):
+def n_sample(distribution, values, n):
     if sum(distribution) != 1:
         distribution = normalize(distribution)
     rand = [random.random() for i in range(n)]
     rand.sort()
     samples = []
-    samplePos, distPos, cdf = 0, 0, distribution[0]
-    while samplePos < n:
-        if rand[samplePos] < cdf:
-            samplePos += 1
-            samples.append(values[distPos])
+    sample_pos, dist_pos, cdf = 0, 0, distribution[0]
+    while sample_pos < n:
+        if rand[sample_pos] < cdf:
+            sample_pos += 1
+            samples.append(values[dist_pos])
         else:
-            distPos += 1
-            cdf += distribution[distPos]
+            dist_pos += 1
+            cdf += distribution[dist_pos]
     return samples
 
 
@@ -1078,12 +1078,12 @@ def sample(distribution, values=None):
     return values[i]
 
 
-def sampleFromCounter(ctr):
+def sample_from_counter(ctr):
     items = sorted(ctr.items())
     return sample([v for k, v in items], [k for k, v in items])
 
 
-def getProbability(value, distribution, values):
+def get_probability(value, distribution, values):
     """
     Gives the probability of a value under a discrete distribution
     defined by (distributions, values).
@@ -1095,12 +1095,12 @@ def getProbability(value, distribution, values):
     return total
 
 
-def flipCoin(p):
+def flip_coin(p):
     r = random.random()
     return r < p
 
 
-def chooseFromDistribution(distribution):
+def choose_from_distribution(distribution):
     "Takes either a counter or a list of (prob, key) pairs and samples"
     if type(distribution) == dict or type(distribution) == Counter:
         return sample(distribution)
@@ -1112,7 +1112,7 @@ def chooseFromDistribution(distribution):
             return element
 
 
-def nearestPoint(pos):
+def nearest_point(pos):
     """
     Finds the nearest grid point to a position (discretizes).
     """
@@ -1133,7 +1133,7 @@ def sign(x):
         return -1
 
 
-def arrayInvert(array):
+def array_invert(array):
     """
     Inverts a matrix stored as a list of lists.
     """
@@ -1144,7 +1144,7 @@ def arrayInvert(array):
     return result
 
 
-def matrixAsList(matrix, value=True):
+def matrix_as_list(matrix, value=True):
     """
     Turns a matrix into a list of coordinates matching the specified value
     """
@@ -1160,13 +1160,13 @@ def matrixAsList(matrix, value=True):
 def lookup(name, namespace):
     """
     Get a method or class from any imported module from its name.
-    Usage: lookup(functionName, globals())
+    Usage: lookup(function_name, globals())
     """
     dots = name.count(".")
     if dots > 0:
-        moduleName, objName = ".".join(name.split(".")[:-1]), name.split(".")[-1]
-        module = __import__(moduleName)
-        return getattr(module, objName)
+        module_name, obj_name = ".".join(name.split(".")[:-1]), name.split(".")[-1]
+        module = __import__(module_name)
+        return getattr(module, obj_name)
     else:
         modules = [
             obj
@@ -1216,7 +1216,7 @@ class TimeoutFunction(object):
     def handle_timeout(self, signum, frame):
         raise TimeoutFunctionException()
 
-    def __call__(self, *args, **keyArgs):
+    def __call__(self, *args, **key_args):
         # If we have SIGALRM signal, use it to cause an exception if and
         # when this function runs too long.  Otherwise check the time taken
         # after the method has returned, and throw an exception then.
@@ -1224,15 +1224,15 @@ class TimeoutFunction(object):
             old = signal.signal(signal.SIGALRM, self.handle_timeout)
             signal.alarm(self.timeout)
             try:
-                result = self.function(*args, **keyArgs)
+                result = self.function(*args, **key_args)
             finally:
                 signal.signal(signal.SIGALRM, old)
             signal.alarm(0)
         else:
-            startTime = time.time()
-            result = self.function(*args, **keyArgs)
-            timeElapsed = time.time() - startTime
-            if timeElapsed >= self.timeout:
+            start_time = time.time()
+            result = self.function(*args, **key_args)
+            time_elapsed = time.time() - start_time
+            if time_elapsed >= self.timeout:
                 self.handle_timeout(None, None)
         return result
 
@@ -1247,7 +1247,7 @@ class WritableNull(object):
         pass
 
 
-def mutePrint():
+def mute_print():
     global _ORIGINAL_STDOUT, _ORIGINAL_STDERR, _MUTED
     if _MUTED:
         return
@@ -1259,7 +1259,7 @@ def mutePrint():
     # sys.stderr = WritableNull()
 
 
-def unmutePrint():
+def unmute_print():
     global _ORIGINAL_STDOUT, _ORIGINAL_STDERR, _MUTED
     if not _MUTED:
         return

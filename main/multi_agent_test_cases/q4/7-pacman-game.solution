@@ -1,4 +1,4 @@
-optimalActions: """
+optimal_actions: """
 [[["West", "East"], 59], [["West", "East"], 35]]
 [[["West"], 190], [["West"], 127]]
 [[["West"], 190], [["West"], 135]]
@@ -146,7 +146,7 @@ optimalActions: """
 [[["West"], 25], [["West"], 13]]
 [[["West", "Stop", "East"], 7], [["West", "East"], 3]]
 """
-altDepthActions: """
+alt_depth_actions: """
 [["West", "East"], ["West", "East"], ["West", "East"], ["West", "East"]]
 [["West"], ["West"], ["West"], ["West"]]
 [["West"], ["West"], ["West"], ["West"]]
@@ -294,7 +294,7 @@ altDepthActions: """
 [["West"], ["West"], ["West"], ["West"]]
 [["West", "Stop", "East"], ["West", "East"], ["West", "Stop", "East"], ["West", "East"]]
 """
-partialPlyBugActions: """
+partial_ply_bug_actions: """
 [["West", "East"], ["West", "East"]]
 [["West"], ["West"]]
 [["West"], ["West"]]

@@ -1,9 +1,9 @@
 # This is a basic depth first search test
 class: "PacmanSearchTest"
-algorithm: "depthFirstSearch"
+algorithm: "depth_first_search"
 
 # The following specifies the layout to be used 
-layoutName: "mediumMaze"
+layout_name: "medium_maze"
 layout: """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                 P%

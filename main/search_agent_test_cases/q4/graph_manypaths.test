@@ -1,5 +1,5 @@
 class: "GraphSearchTest"
-algorithm: "aStarSearch"
+algorithm: "a_star_search"
 
 diagram: """
     B1          E1

@@ -1,9 +1,9 @@
 # This is a basic breadth first search test
 class: "PacmanSearchTest"
-algorithm: "breadthFirstSearch"
+algorithm: "breadth_first_search"
 
 # The following specifies the layout to be used 
-layoutName: "mediumMaze"
+layout_name: "medium_maze"
 layout: """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                 P%

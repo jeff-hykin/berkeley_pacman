@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-# textDisplay.py
+# text_display.py
 # --------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -31,13 +31,13 @@ QUIET = False  # Supresses output
 
 
 class NullGraphics(object):
-    def initialize(self, state, isBlue=False):
+    def initialize(self, state, is_blue=False):
         pass
 
     def update(self, state):
         pass
 
-    def checkNullDisplay(self):
+    def check_null_display(self):
         return True
 
     def pause(self):
@@ -46,7 +46,7 @@ class NullGraphics(object):
     def draw(self, state):
         print(state)
 
-    def updateDistributions(self, dist):
+    def update_distributions(self, dist):
         pass
 
     def finish(self):
@@ -59,25 +59,25 @@ class PacmanGraphics(object):
             global SLEEP_TIME
             SLEEP_TIME = speed
 
-    def initialize(self, state, isBlue=False):
+    def initialize(self, state, is_blue=False):
         self.draw(state)
         self.pause()
         self.turn = 0
-        self.agentCounter = 0
+        self.agent_counter = 0
 
     def update(self, state):
-        numAgents = len(state.agentStates)
-        self.agentCounter = (self.agentCounter + 1) % numAgents
-        if self.agentCounter == 0:
+        num_agents = len(state.agent_states)
+        self.agent_counter = (self.agent_counter + 1) % num_agents
+        if self.agent_counter == 0:
             self.turn += 1
             if DISPLAY_MOVES:
                 ghosts = [
-                    pacman.nearestPoint(state.getGhostPosition(i))
-                    for i in range(1, numAgents)
+                    pacman.nearest_point(state.get_ghost_position(i))
+                    for i in range(1, num_agents)
                 ]
                 print(
                     "%4d) P: %-8s"
-                    % (self.turn, str(pacman.nearestPoint(state.getPacmanPosition()))),
+                    % (self.turn, str(pacman.nearest_point(state.get_pacman_position()))),
                     "| Score: %-5d" % state.score,
                     "| Ghosts:",
                     ghosts,

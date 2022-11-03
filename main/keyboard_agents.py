@@ -1,4 +1,4 @@
-# keyboardAgents.py
+# keyboard_agents.py
 # -----------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -31,25 +31,25 @@ class KeyboardAgent(Agent):
 
     def __init__(self, index=0):
 
-        self.lastMove = Directions.STOP
+        self.last_move = Directions.STOP
         self.index = index
         self.keys = []
 
-    def getAction(self, state):
-        from graphicsUtils import keys_waiting
-        from graphicsUtils import keys_pressed
+    def get_action(self, state):
+        from graphics_utils import keys_waiting
+        from graphics_utils import keys_pressed
 
         keys = keys_waiting() + keys_pressed()
         if keys != []:
             self.keys = keys
 
-        legal = state.getLegalActions(self.index)
-        move = self.getMove(legal)
+        legal = state.get_legal_actions(self.index)
+        move = self.get_move(legal)
 
         if move == Directions.STOP:
             # Try to move in the same direction as before
-            if self.lastMove in legal:
-                move = self.lastMove
+            if self.last_move in legal:
+                move = self.last_move
 
         if (self.STOP_KEY in self.keys) and Directions.STOP in legal:
             move = Directions.STOP
@@ -57,10 +57,10 @@ class KeyboardAgent(Agent):
         if move not in legal:
             move = random.choice(legal)
 
-        self.lastMove = move
+        self.last_move = move
         return move
 
-    def getMove(self, legal):
+    def get_move(self, legal):
         move = Directions.STOP
         if (
             self.WEST_KEY in self.keys or "Left" in self.keys
@@ -93,7 +93,7 @@ class KeyboardAgent2(KeyboardAgent):
     SOUTH_KEY = "k"
     STOP_KEY = "u"
 
-    def getMove(self, legal):
+    def get_move(self, legal):
         move = Directions.STOP
         if (self.WEST_KEY in self.keys) and Directions.WEST in legal:
             move = Directions.WEST

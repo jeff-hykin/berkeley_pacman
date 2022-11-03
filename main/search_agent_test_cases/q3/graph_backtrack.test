@@ -1,5 +1,5 @@
 class: "GraphSearchTest"
-algorithm: "uniformCostSearch"
+algorithm: "uniform_cost_search"
 
 diagram: """
  B   

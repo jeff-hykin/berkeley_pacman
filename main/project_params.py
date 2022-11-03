@@ -1,4 +1,4 @@
-# projectParams.py
+# project_params.py
 # ----------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -14,15 +14,15 @@
 
 choices = {
     "search_agent": {
-        "STUDENT_CODE_DEFAULT" : "searchAgents.py,search.py",
-        "PROJECT_TEST_CLASSES" : "searchTestClasses.py",
+        "STUDENT_CODE_DEFAULT" : "search_agents.py,search.py",
+        "PROJECT_TEST_CLASSES" : "search_test_classes.py",
         "PROJECT_NAME" : "Project 1: Search",
         "BONUS_PIC" : False,
         "TEST_CASES": "search_agent_test_cases",
     },
     "multi_agent": {
-        "STUDENT_CODE_DEFAULT" : 'multiAgents.py',
-        "PROJECT_TEST_CLASSES" : 'multiagentTestClasses.py',
+        "STUDENT_CODE_DEFAULT" : 'multi_agents.py',
+        "PROJECT_TEST_CLASSES" : 'multiagent_test_classes.py',
         "PROJECT_NAME" : 'Project 2: Multiagent search',
         "BONUS_PIC" : False,
         "TEST_CASES": "multi_agent_test_cases",

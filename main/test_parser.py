@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-# testParser.py
+# test_parser.py
 # -------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -24,7 +24,7 @@ class TestParser(object):
         # save the path to the test file
         self.path = path
 
-    def removeComments(self, rawlines):
+    def remove_comments(self, rawlines):
         # remove any portion of a line following a '#' symbol
         fixed_lines = []
         for l in rawlines:
@@ -41,7 +41,7 @@ class TestParser(object):
         with open(self.path) as handle:
             raw_lines = handle.read().split("\n")
 
-        test_text = self.removeComments(raw_lines)
+        test_text = self.remove_comments(raw_lines)
         test["__raw_lines__"] = raw_lines
         test["path"] = self.path
         test["__emit__"] = []
@@ -76,13 +76,13 @@ class TestParser(object):
         return test
 
 
-def emitTestDict(testDict, handle):
-    for kind, data in testDict["__emit__"]:
+def emit_test_dict(test_dict, handle):
+    for kind, data in test_dict["__emit__"]:
         if kind == "raw":
             handle.write(data + "\n")
         elif kind == "oneline":
-            handle.write('%s: "%s"\n' % (data, testDict[data]))
+            handle.write('%s: "%s"\n' % (data, test_dict[data]))
         elif kind == "multiline":
-            handle.write('%s: """\n%s\n"""\n' % (data, testDict[data]))
+            handle.write('%s: """\n%s\n"""\n' % (data, test_dict[data]))
         else:
             raise Exception("Bad __emit__")

@@ -1,6 +1,6 @@
 # Graph where BFS finds the optimal solution but DFS does not
 class: "GraphSearchTest"
-algorithm: "uniformCostSearch"
+algorithm: "uniform_cost_search"
 
 diagram: """
 /-- B

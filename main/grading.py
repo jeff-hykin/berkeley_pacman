@@ -33,50 +33,50 @@ class Grades(object):
 
     def __init__(
         self,
-        projectName,
-        questionsAndMaxesList,
-        gsOutput=False,
-        edxOutput=False,
-        muteOutput=False,
+        project_name,
+        questions_and_maxes_list,
+        gs_output=False,
+        edx_output=False,
+        mute_output=False,
     ):
         """
         Defines the grading scheme for a project
-          projectName: project name
-          questionsAndMaxesDict: a list of (question name, max points per question)
+          project_name: project name
+          questions_and_maxes_dict: a list of (question name, max points per question)
         """
-        self.questions = [el[0] for el in questionsAndMaxesList]
-        self.maxes = dict(questionsAndMaxesList)
+        self.questions = [el[0] for el in questions_and_maxes_list]
+        self.maxes = dict(questions_and_maxes_list)
         self.points = Counter()
         self.messages = dict([(q, []) for q in self.questions])
-        self.project = projectName
+        self.project = project_name
         self.start = time.localtime()[1:6]
         self.sane = True  # Sanity checks
-        self.currentQuestion = None  # Which question we're grading
-        self.edxOutput = edxOutput
-        self.gsOutput = gsOutput  # GradeScope output
-        self.mute = muteOutput
+        self.current_question = None  # Which question we're grading
+        self.edx_output = edx_output
+        self.gs_output = gs_output  # GradeScope output
+        self.mute = mute_output
         self.prereqs = defaultdict(set)
 
         # print 'Autograder transcript for %s' % self.project
         print("Starting on %d-%d at %d:%02d:%02d" % self.start)
 
-    def addPrereq(self, question, prereq):
+    def add_prereq(self, question, prereq):
         self.prereqs[question].add(prereq)
 
-    def grade(self, gradingModule, exceptionMap={}, bonusPic=False):
+    def grade(self, grading_module, exception_map={}, bonus_pic=False):
         """
         Grades each question
-          gradingModule: the module with all the grading functions (pass in with sys.modules[__name__])
+          grading_module: the module with all the grading functions (pass in with sys.modules[__name__])
         """
 
-        completedQuestions = set([])
+        completed_questions = set([])
         for q in self.questions:
             print("\nQuestion %s" % q)
             print("=" * (9 + len(q)))
             print()
-            self.currentQuestion = q
+            self.current_question = q
 
-            incompleted = self.prereqs[q].difference(completedQuestions)
+            incompleted = self.prereqs[q].difference(completed_questions)
             if len(incompleted) > 0:
                 prereq = incompleted.pop()
                 print(
@@ -88,23 +88,23 @@ class Grades(object):
                 continue
 
             if self.mute:
-                util.mutePrint()
+                util.mute_print()
             try:
-                util.TimeoutFunction(getattr(gradingModule, q), 1800)(
+                util.TimeoutFunction(getattr(grading_module, q), 1800)(
                     self
                 )  # Call the question's function
-                # TimeoutFunction(getattr(gradingModule, q),1200)(self) # Call the question's function
+                # TimeoutFunction(getattr(grading_module, q),1200)(self) # Call the question's function
             except Exception as inst:
-                self.addExceptionMessage(q, inst, traceback)
-                self.addErrorHints(exceptionMap, inst, q[1])
+                self.add_exception_message(q, inst, traceback)
+                self.add_error_hints(exception_map, inst, q[1])
             except:
                 self.fail("FAIL: Terminated with a string exception.")
             finally:
                 if self.mute:
-                    util.unmutePrint()
+                    util.unmute_print()
 
             if self.points[q] >= self.maxes[q]:
-                completedQuestions.add(q)
+                completed_questions.add(q)
 
             print("\n### Question %s: %d/%d ###\n" % (q, self.points[q], self.maxes[q]))
 
@@ -114,8 +114,8 @@ class Grades(object):
         for q in self.questions:
             print("Question %s: %d/%d" % (q, self.points[q], self.maxes[q]))
         print("------------------")
-        print("Total: %d/%d" % (self.points.totalCount(), sum(self.maxes.values())))
-        if bonusPic and self.points.totalCount() == 25:
+        print("Total: %d/%d" % (self.points.total_count(), sum(self.maxes.values())))
+        if bonus_pic and self.points.total_count() == 25:
             print(
                 """
 
@@ -152,44 +152,44 @@ class Grades(object):
             )
         print("""    (Don't forget to upload your project to receive credit)""")
 
-        if self.edxOutput:
-            self.produceOutput()
-        if self.gsOutput:
-            self.produceGradeScopeOutput()
+        if self.edx_output:
+            self.produce_output()
+        if self.gs_output:
+            self.produce_grade_scope_output()
 
-    def addExceptionMessage(self, q, inst, traceback):
+    def add_exception_message(self, q, inst, traceback):
         """
         Method to format the exception message, this is more complicated because
         we need to cgi.escape the traceback but wrap the exception in a <pre> tag
         """
         self.fail("FAIL: Exception raised: %s" % inst)
-        self.addMessage("")
+        self.add_message("")
         for line in traceback.format_exc().split("\n"):
-            self.addMessage(line)
+            self.add_message(line)
 
-    def addErrorHints(self, exceptionMap, errorInstance, questionNum):
-        typeOf = str(type(errorInstance))
-        questionName = "q" + questionNum
-        errorHint = ""
+    def add_error_hints(self, exception_map, error_instance, question_num):
+        type_of = str(type(error_instance))
+        question_name = "q" + question_num
+        error_hint = ""
 
         # question specific error hints
-        if exceptionMap.get(questionName):
-            questionMap = exceptionMap.get(questionName)
-            if questionMap.get(typeOf):
-                errorHint = questionMap.get(typeOf)
+        if exception_map.get(question_name):
+            question_map = exception_map.get(question_name)
+            if question_map.get(type_of):
+                error_hint = question_map.get(type_of)
         # fall back to general error messages if a question specific
         # one does not exist
-        if exceptionMap.get(typeOf):
-            errorHint = exceptionMap.get(typeOf)
+        if exception_map.get(type_of):
+            error_hint = exception_map.get(type_of)
 
         # dont include the HTML if we have no error hint
-        if not errorHint:
+        if not error_hint:
             return ""
 
-        for line in errorHint.split("\n"):
-            self.addMessage(line)
+        for line in error_hint.split("\n"):
+            self.add_message(line)
 
-    def produceGradeScopeOutput(self):
+    def produce_grade_scope_output(self):
         out_dct = {}
 
         # total of entire submission
@@ -225,40 +225,40 @@ class Grades(object):
             json.dump(out_dct, outfile)
         return
 
-    def produceOutput(self):
-        edxOutput = open("edx_response.html", "w")
-        edxOutput.write("<div>")
+    def produce_output(self):
+        edx_output = open("edx_response.html", "w")
+        edx_output.write("<div>")
 
         # first sum
         total_possible = sum(self.maxes.values())
         total_score = sum(self.points.values())
-        checkOrX = '<span class="incorrect"/>'
+        check_or_x = '<span class="incorrect"/>'
         if total_score >= total_possible:
-            checkOrX = '<span class="correct"/>'
+            check_or_x = '<span class="correct"/>'
         header = """
         <h3>
             Total score ({total_score} / {total_possible})
         </h3>
     """.format(
-            total_score=total_score, total_possible=total_possible, checkOrX=checkOrX
+            total_score=total_score, total_possible=total_possible, check_or_x=check_or_x
         )
-        edxOutput.write(header)
+        edx_output.write(header)
 
         for q in self.questions:
             if len(q) == 2:
                 name = q[1]
             else:
                 name = q
-            checkOrX = '<span class="incorrect"/>'
+            check_or_x = '<span class="incorrect"/>'
             if self.points[q] >= self.maxes[q]:
-                checkOrX = '<span class="correct"/>'
+                check_or_x = '<span class="correct"/>'
             # messages = '\n<br/>\n'.join(self.messages[q])
             messages = "<pre>%s</pre>" % "\n".join(self.messages[q])
             output = """
         <div class="test">
           <section>
           <div class="shortform">
-            Question {q} ({points}/{max}) {checkOrX}
+            Question {q} ({points}/{max}) {check_or_x}
           </div>
         <div class="longform">
           {messages}
@@ -269,55 +269,55 @@ class Grades(object):
                 q=name,
                 max=self.maxes[q],
                 messages=messages,
-                checkOrX=checkOrX,
+                check_or_x=check_or_x,
                 points=self.points[q],
             )
             # print "*** output for Question %s " % q[1]
             # print output
-            edxOutput.write(output)
-        edxOutput.write("</div>")
-        edxOutput.close()
-        edxOutput = open("edx_grade", "w")
-        edxOutput.write(str(self.points.totalCount()))
-        edxOutput.close()
+            edx_output.write(output)
+        edx_output.write("</div>")
+        edx_output.close()
+        edx_output = open("edx_grade", "w")
+        edx_output.write(str(self.points.total_count()))
+        edx_output.close()
 
     def fail(self, message, raw=False):
         "Sets sanity check bit to false and outputs a message"
         self.sane = False
-        self.assignZeroCredit()
-        self.addMessage(message, raw)
+        self.assign_zero_credit()
+        self.add_message(message, raw)
 
-    def assignZeroCredit(self):
-        self.points[self.currentQuestion] = 0
+    def assign_zero_credit(self):
+        self.points[self.current_question] = 0
 
-    def addPoints(self, amt):
-        self.points[self.currentQuestion] += amt
+    def add_points(self, amt):
+        self.points[self.current_question] += amt
 
-    def deductPoints(self, amt):
-        self.points[self.currentQuestion] -= amt
+    def deduct_points(self, amt):
+        self.points[self.current_question] -= amt
 
-    def assignFullCredit(self, message="", raw=False):
-        self.points[self.currentQuestion] = self.maxes[self.currentQuestion]
+    def assign_full_credit(self, message="", raw=False):
+        self.points[self.current_question] = self.maxes[self.current_question]
         if message != "":
-            self.addMessage(message, raw)
+            self.add_message(message, raw)
 
-    def addMessage(self, message, raw=False):
+    def add_message(self, message, raw=False):
         if not raw:
             # We assume raw messages, formatted for HTML, are printed separately
             if self.mute:
-                util.unmutePrint()
+                util.unmute_print()
             print("*** " + message)
             if self.mute:
-                util.mutePrint()
+                util.mute_print()
             message = html.escape(message)
-        self.messages[self.currentQuestion].append(message)
+        self.messages[self.current_question].append(message)
 
-    def addMessageToEmail(self, message):
-        print("WARNING**** addMessageToEmail is deprecated %s" % message)
+    def add_message_to_email(self, message):
+        print("WARNING**** add_message_to_email is deprecated %s" % message)
         for line in message.split("\n"):
             pass
             # print '%%% ' + line + ' %%%'
-            # self.messages[self.currentQuestion].append(line)
+            # self.messages[self.current_question].append(line)
 
 
 class Counter(dict):
@@ -331,7 +331,7 @@ class Counter(dict):
         except KeyError:
             return 0
 
-    def totalCount(self):
+    def total_count(self):
         """
         Returns the sum of counts for all keys.
         """

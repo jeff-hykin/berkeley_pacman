@@ -5,7 +5,7 @@ depth: "2"
 max_points: "4"
 
 # The following specifies the layout to be used 
-layoutName: "smallClassic"
+layout_name: "small_classic"
 layout: """
 %%%%%%%%%%%%%%%%%%%%
 %......%G  G%......%

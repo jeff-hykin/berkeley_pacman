@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-# searchTestClasses.py
+# search_test_classes.py
 # --------------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -18,7 +18,7 @@ from builtins import map
 from builtins import str
 from builtins import range
 import re
-import testClasses
+import test_classes
 import textwrap
 
 # import project specific code
@@ -35,27 +35,27 @@ def wrap_solution(solution):
         return str(solution)
 
 
-def followAction(state, action, problem):
-    for successor1, action1, cost1 in problem.getSuccessors(state):
+def follow_action(state, action, problem):
+    for successor1, action1, cost1 in problem.get_successors(state):
         if action == action1:
             return successor1
     return None
 
 
-def followPath(path, problem):
-    state = problem.getStartState()
+def follow_path(path, problem):
+    state = problem.get_start_state()
     states = [state]
     for action in path:
-        state = followAction(state, action, problem)
+        state = follow_action(state, action, problem)
         states.append(state)
     return states
 
 
-def checkSolution(problem, path):
-    state = problem.getStartState()
+def check_solution(problem, path):
+    state = problem.get_start_state()
     for action in path:
-        state = followAction(state, action, problem)
-    return problem.isGoalState(state)
+        state = follow_action(state, action, problem)
+    return problem.is_goal_state(state)
 
 
 # Search problem on a plain graph
@@ -86,7 +86,7 @@ class GraphSearch(SearchProblem):
         self.goals = list(map(str.strip, goals))
         self.successors = {}
         all_states = set()
-        self.orderedSuccessorTuples = []
+        self.ordered_successor_tuples = []
         for l in lines[2:]:
             if len(l.split()) == 3:
                 start, action, next_state = l.split()
@@ -100,7 +100,7 @@ class GraphSearch(SearchProblem):
                     "Invalid line in GraphSearch graph specification on line:" + l
                 )
             cost = float(cost)
-            self.orderedSuccessorTuples.append((start, action, next_state, cost))
+            self.ordered_successor_tuples.append((start, action, next_state, cost))
             all_states.add(start)
             all_states.add(next_state)
             if start not in self.successors:
@@ -111,20 +111,20 @@ class GraphSearch(SearchProblem):
                 self.successors[s] = []
 
     # Get start state
-    def getStartState(self):
+    def get_start_state(self):
         return self.start_state
 
     # Check if a state is a goal state
-    def isGoalState(self, state):
+    def is_goal_state(self, state):
         return state in self.goals
 
     # Get all successors of a state
-    def getSuccessors(self, state):
+    def get_successors(self, state):
         self.expanded_states.append(state)
         return [ tools.Transition(each) for each in self.successors[state] ]
 
     # Calculate total cost of a sequence of actions
-    def getCostOfActions(self, actions):
+    def get_cost_of_actions(self, actions):
         total_cost = 0
         state = self.start_state
         for a in actions:
@@ -140,13 +140,13 @@ class GraphSearch(SearchProblem):
                 sys.exit(1)
         return total_cost
 
-    # Return a list of all states on which 'getSuccessors' was called
-    def getExpandedStates(self):
+    # Return a list of all states on which 'get_successors' was called
+    def get_expanded_states(self):
         return self.expanded_states
 
     def __str__(self):
         print(self.successors)
-        edges = ["%s %s %s %s" % t for t in self.orderedSuccessorTuples]
+        edges = ["%s %s %s %s" % t for t in self.ordered_successor_tuples]
         return """start_state: %s
 goal_states: %s
 %s""" % (
@@ -156,9 +156,9 @@ goal_states: %s
         )
 
 
-def parseHeuristic(heuristicText):
+def parse_heuristic(heuristic_text):
     heuristic = {}
-    for line in heuristicText.split("\n"):
+    for line in heuristic_text.split("\n"):
         tokens = line.split()
         if len(tokens) != 2:
             print("Broken heuristic:")
@@ -167,7 +167,7 @@ def parseHeuristic(heuristicText):
         state, h = tokens
         heuristic[state] = float(h)
 
-    def graphHeuristic(state, problem=None):
+    def graph_heuristic(state, problem=None):
         if state in heuristic:
             return heuristic[state]
         else:
@@ -176,26 +176,26 @@ def parseHeuristic(heuristicText):
             pp.pprint(heuristic)
             raise Exception("Graph heuristic called with invalid state: " + str(state))
 
-    return graphHeuristic
+    return graph_heuristic
 
 
-class GraphSearchTest(testClasses.TestCase):
-    def __init__(self, question, testDict):
-        super(GraphSearchTest, self).__init__(question, testDict)
-        self.graph_text = testDict["graph"]
-        self.alg = testDict["algorithm"]
-        self.diagram = testDict["diagram"]
-        self.exactExpansionOrder = (
-            testDict.get("exactExpansionOrder", "True").lower() == "true"
+class GraphSearchTest(test_classes.TestCase):
+    def __init__(self, question, test_dict):
+        super(GraphSearchTest, self).__init__(question, test_dict)
+        self.graph_text = test_dict["graph"]
+        self.alg = test_dict["algorithm"]
+        self.diagram = test_dict["diagram"]
+        self.exact_expansion_order = (
+            test_dict.get("exact_expansion_order", "True").lower() == "true"
         )
-        if "heuristic" in testDict:
-            self.heuristic = parseHeuristic(testDict["heuristic"])
+        if "heuristic" in test_dict:
+            self.heuristic = parse_heuristic(test_dict["heuristic"])
         else:
             self.heuristic = None
 
     # Note that the return type of this function is a tripple:
     # (solution, expanded states, error message)
-    def getSolInfo(self, search):
+    def get_sol_info(self, search):
         alg = getattr(search, self.alg)
         problem = GraphSearch(self.graph_text)
         if self.heuristic != None:
@@ -211,65 +211,65 @@ class GraphSearchTest(testClasses.TestCase):
                 % (self.alg, type(solution)),
             )
 
-        return solution, problem.getExpandedStates(), None
+        return solution, problem.get_expanded_states(), None
 
     # Run student code.  If an error message is returned, print error and return false.
     # If a good solution is returned, printn the solution and return true; otherwise,
     # print both the correct and student's solution and return false.
-    def execute(self, grades, moduleDict, solutionDict):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def execute(self, grades, module_dict, solution_dict):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         gold_solution = [
-            str.split(solutionDict["solution"]),
-            str.split(solutionDict["rev_solution"]),
+            str.split(solution_dict["solution"]),
+            str.split(solution_dict["rev_solution"]),
         ]
         gold_expanded_states = [
-            str.split(solutionDict["expanded_states"]),
-            str.split(solutionDict["rev_expanded_states"]),
+            str.split(solution_dict["expanded_states"]),
+            str.split(solution_dict["rev_expanded_states"]),
         ]
 
-        solution, expanded_states, error = self.getSolInfo(search)
+        solution, expanded_states, error = self.get_sol_info(search)
         if error != None:
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("\t%s" % error)
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("\t%s" % error)
             return False
 
         if solution in gold_solution and (
-            not self.exactExpansionOrder or expanded_states in gold_expanded_states
+            not self.exact_expansion_order or expanded_states in gold_expanded_states
         ):
-            grades.addMessage("PASS: %s" % self.path)
-            grades.addMessage("\tsolution:\t\t%s" % solution)
-            grades.addMessage("\texpanded_states:\t%s" % expanded_states)
+            grades.add_message("PASS: %s" % self.path)
+            grades.add_message("\tsolution:\t\t%s" % solution)
+            grades.add_message("\texpanded_states:\t%s" % expanded_states)
             return True
         else:
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("\tgraph:")
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("\tgraph:")
             for line in self.diagram.split("\n"):
-                grades.addMessage("\t    %s" % (line,))
-            grades.addMessage("\tstudent solution:\t\t%s" % solution)
-            grades.addMessage("\tstudent expanded_states:\t%s" % expanded_states)
-            grades.addMessage("")
-            grades.addMessage("\tcorrect solution:\t\t%s" % gold_solution[0])
-            grades.addMessage(
+                grades.add_message("\t    %s" % (line,))
+            grades.add_message("\tstudent solution:\t\t%s" % solution)
+            grades.add_message("\tstudent expanded_states:\t%s" % expanded_states)
+            grades.add_message("")
+            grades.add_message("\tcorrect solution:\t\t%s" % gold_solution[0])
+            grades.add_message(
                 "\tcorrect expanded_states:\t%s" % gold_expanded_states[0]
             )
-            grades.addMessage("\tcorrect rev_solution:\t\t%s" % gold_solution[1])
-            grades.addMessage(
+            grades.add_message("\tcorrect rev_solution:\t\t%s" % gold_solution[1])
+            grades.add_message(
                 "\tcorrect rev_expanded_states:\t%s" % gold_expanded_states[1]
             )
             return False
 
-    def writeSolution(self, moduleDict, filePath):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def write_solution(self, module_dict, file_path):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         # open file and write comments
-        handle = open(filePath, "w")
+        handle = open(file_path, "w")
         handle.write("# This is the solution file for %s.\n" % self.path)
         handle.write("# This solution is designed to support both right-to-left\n")
         handle.write("# and left-to-right implementations.\n")
 
         # write forward solution
-        solution, expanded_states, error = self.getSolInfo(search)
+        solution, expanded_states, error = self.get_sol_info(search)
         if error != None:
             raise Exception("Error in solution code: %s" % error)
         handle.write('solution: "%s"\n' % " ".join(solution))
@@ -277,7 +277,7 @@ class GraphSearchTest(testClasses.TestCase):
 
         # reverse and write backwards solution
         search.REVERSE_PUSH = not search.REVERSE_PUSH
-        solution, expanded_states, error = self.getSolInfo(search)
+        solution, expanded_states, error = self.get_sol_info(search)
         if error != None:
             raise Exception("Error in solution code: %s" % error)
         handle.write('rev_solution: "%s"\n' % " ".join(solution))
@@ -289,35 +289,35 @@ class GraphSearchTest(testClasses.TestCase):
         return True
 
 
-class PacmanSearchTest(testClasses.TestCase):
-    def __init__(self, question, testDict):
-        super(PacmanSearchTest, self).__init__(question, testDict)
-        self.layout_text = testDict["layout"]
-        self.alg = testDict["algorithm"]
-        self.layoutName = testDict["layoutName"]
+class PacmanSearchTest(test_classes.TestCase):
+    def __init__(self, question, test_dict):
+        super(PacmanSearchTest, self).__init__(question, test_dict)
+        self.layout_text = test_dict["layout"]
+        self.alg = test_dict["algorithm"]
+        self.layout_name = test_dict["layout_name"]
 
         # TODO: sensible to have defaults like this?
-        self.leewayFactor = float(testDict.get("leewayFactor", "1"))
-        self.costFn = eval(testDict.get("costFn", "None"))
-        self.searchProblemClassName = testDict.get(
-            "searchProblemClass", "PositionSearchProblem"
+        self.leeway_factor = float(test_dict.get("leeway_factor", "1"))
+        self.cost_fn = eval(test_dict.get("cost_fn", "None"))
+        self.search_problem_class_name = test_dict.get(
+            "search_problem_class", "PositionSearchProblem"
         )
-        self.heuristicName = testDict.get("heuristic", None)
+        self.heuristic_name = test_dict.get("heuristic", None)
 
-    def getSolInfo(self, search, searchAgents):
+    def get_sol_info(self, search, search_agents):
         alg = getattr(search, self.alg)
         lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
         start_state = pacman.GameState()
         start_state.initialize(lay, 0)
 
-        problemClass = getattr(searchAgents, self.searchProblemClassName)
-        problemOptions = {}
-        if self.costFn != None:
-            problemOptions["costFn"] = self.costFn
-        problem = problemClass(start_state, **problemOptions)
+        problem_class = getattr(search_agents, self.search_problem_class_name)
+        problem_options = {}
+        if self.cost_fn != None:
+            problem_options["cost_fn"] = self.cost_fn
+        problem = problem_class(start_state, **problem_options)
         heuristic = (
-            getattr(searchAgents, self.heuristicName)
-            if self.heuristicName != None
+            getattr(search_agents, self.heuristic_name)
+            if self.heuristic_name != None
             else None
         )
 
@@ -348,78 +348,78 @@ class PacmanSearchTest(testClasses.TestCase):
         expanded = problem._expanded
         return solution, expanded, None
 
-    def execute(self, grades, moduleDict, solutionDict):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def execute(self, grades, module_dict, solution_dict):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         gold_solution = [
-            str.split(solutionDict["solution"]),
-            str.split(solutionDict["rev_solution"]),
+            str.split(solution_dict["solution"]),
+            str.split(solution_dict["rev_solution"]),
         ]
         gold_expanded = max(
-            int(solutionDict["expanded_nodes"]), int(solutionDict["rev_expanded_nodes"])
+            int(solution_dict["expanded_nodes"]), int(solution_dict["rev_expanded_nodes"])
         )
 
-        solution, expanded, error = self.getSolInfo(search, searchAgents)
+        solution, expanded, error = self.get_sol_info(search, search_agents)
         if error != None:
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("%s" % error)
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("%s" % error)
             return False
 
         # FIXME: do we want to standardize test output format?
 
         if solution not in gold_solution:
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("Solution not correct.")
-            grades.addMessage("\tstudent solution length: %s" % len(solution))
-            grades.addMessage("\tstudent solution:\n%s" % wrap_solution(solution))
-            grades.addMessage("")
-            grades.addMessage("\tcorrect solution length: %s" % len(gold_solution[0]))
-            grades.addMessage(
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("Solution not correct.")
+            grades.add_message("\tstudent solution length: %s" % len(solution))
+            grades.add_message("\tstudent solution:\n%s" % wrap_solution(solution))
+            grades.add_message("")
+            grades.add_message("\tcorrect solution length: %s" % len(gold_solution[0]))
+            grades.add_message(
                 "\tcorrect (reversed) solution length: %s" % len(gold_solution[1])
             )
-            grades.addMessage(
+            grades.add_message(
                 "\tcorrect solution:\n%s" % wrap_solution(gold_solution[0])
             )
-            grades.addMessage(
+            grades.add_message(
                 "\tcorrect (reversed) solution:\n%s" % wrap_solution(gold_solution[1])
             )
             return False
 
         if (
-            expanded > self.leewayFactor * gold_expanded
+            expanded > self.leeway_factor * gold_expanded
             and expanded > gold_expanded + 1
         ):
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("Too many node expanded; are you expanding nodes twice?")
-            grades.addMessage("\tstudent nodes expanded: %s" % expanded)
-            grades.addMessage("")
-            grades.addMessage(
-                "\tcorrect nodes expanded: %s (leewayFactor %s)"
-                % (gold_expanded, self.leewayFactor)
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("Too many node expanded; are you expanding nodes twice?")
+            grades.add_message("\tstudent nodes expanded: %s" % expanded)
+            grades.add_message("")
+            grades.add_message(
+                "\tcorrect nodes expanded: %s (leeway_factor %s)"
+                % (gold_expanded, self.leeway_factor)
             )
             return False
 
-        grades.addMessage("PASS: %s" % self.path)
-        grades.addMessage("\tpacman layout:\t\t%s" % self.layoutName)
-        grades.addMessage("\tsolution length: %s" % len(solution))
-        grades.addMessage("\tnodes expanded:\t\t%s" % expanded)
+        grades.add_message("PASS: %s" % self.path)
+        grades.add_message("\tpacman layout:\t\t%s" % self.layout_name)
+        grades.add_message("\tsolution length: %s" % len(solution))
+        grades.add_message("\tnodes expanded:\t\t%s" % expanded)
         return True
 
-    def writeSolution(self, moduleDict, filePath):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def write_solution(self, module_dict, file_path):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         # open file and write comments
-        handle = open(filePath, "w")
+        handle = open(file_path, "w")
         handle.write("# This is the solution file for %s.\n" % self.path)
         handle.write("# This solution is designed to support both right-to-left\n")
         handle.write("# and left-to-right implementations.\n")
         handle.write(
             "# Number of nodes expanded must be with a factor of %s of the numbers below.\n"
-            % self.leewayFactor
+            % self.leeway_factor
         )
 
         # write forward solution
-        solution, expanded, error = self.getSolInfo(search, searchAgents)
+        solution, expanded, error = self.get_sol_info(search, search_agents)
         if error != None:
             raise Exception("Error in solution code: %s" % error)
         handle.write('solution: """\n%s\n"""\n' % wrap_solution(solution))
@@ -427,7 +427,7 @@ class PacmanSearchTest(testClasses.TestCase):
 
         # write backward solution
         search.REVERSE_PUSH = not search.REVERSE_PUSH
-        solution, expanded, error = self.getSolInfo(search, searchAgents)
+        solution, expanded, error = self.get_sol_info(search, search_agents)
         if error != None:
             raise Exception("Error in solution code: %s" % error)
         handle.write('rev_solution: """\n%s\n"""\n' % wrap_solution(solution))
@@ -442,83 +442,83 @@ class PacmanSearchTest(testClasses.TestCase):
 from game import Actions
 
 
-def getStatesFromPath(start, path):
+def get_states_from_path(start, path):
     "Returns the list of states visited along the path"
     vis = [start]
     curr = start
     for a in path:
         x, y = curr
-        dx, dy = Actions.directionToVector(a)
+        dx, dy = Actions.direction_to_vector(a)
         curr = (int(x + dx), int(y + dy))
         vis.append(curr)
     return vis
 
 
-class CornerProblemTest(testClasses.TestCase):
-    def __init__(self, question, testDict):
-        super(CornerProblemTest, self).__init__(question, testDict)
-        self.layoutText = testDict["layout"]
-        self.layoutName = testDict["layoutName"]
+class CornerProblemTest(test_classes.TestCase):
+    def __init__(self, question, test_dict):
+        super(CornerProblemTest, self).__init__(question, test_dict)
+        self.layout_text = test_dict["layout"]
+        self.layout_name = test_dict["layout_name"]
 
-    def solution(self, search, searchAgents):
-        lay = layout.Layout([l.strip() for l in self.layoutText.split("\n")])
-        gameState = pacman.GameState()
-        gameState.initialize(lay, 0)
-        problem = searchAgents.CornersProblem(gameState)
+    def solution(self, search, search_agents):
+        lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
+        game_state = pacman.GameState()
+        game_state.initialize(lay, 0)
+        problem = search_agents.CornersProblem(game_state)
         path = search.bfs(problem)
 
-        gameState = pacman.GameState()
-        gameState.initialize(lay, 0)
-        visited = getStatesFromPath(gameState.getPacmanPosition(), path)
-        top, right = gameState.getWalls().height - 2, gameState.getWalls().width - 2
-        missedCorners = [
+        game_state = pacman.GameState()
+        game_state.initialize(lay, 0)
+        visited = get_states_from_path(game_state.get_pacman_position(), path)
+        top, right = game_state.get_walls().height - 2, game_state.get_walls().width - 2
+        missed_corners = [
             p for p in ((1, 1), (1, top), (right, 1), (right, top)) if p not in visited
         ]
 
-        return path, missedCorners
+        return path, missed_corners
 
-    def execute(self, grades, moduleDict, solutionDict):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
-        gold_length = int(solutionDict["solution_length"])
-        solution, missedCorners = self.solution(search, searchAgents)
+    def execute(self, grades, module_dict, solution_dict):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
+        gold_length = int(solution_dict["solution_length"])
+        solution, missed_corners = self.solution(search, search_agents)
 
         if type(solution) != type([]):
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage(
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message(
                 "The result must be a list. (Instead, it is %s)" % type(solution)
             )
             return False
 
-        if len(missedCorners) != 0:
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("Corners missed: %s" % missedCorners)
+        if len(missed_corners) != 0:
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("Corners missed: %s" % missed_corners)
             return False
 
         if len(solution) != gold_length:
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("Optimal solution not found.")
-            grades.addMessage("\tstudent solution length:\n%s" % len(solution))
-            grades.addMessage("")
-            grades.addMessage("\tcorrect solution length:\n%s" % gold_length)
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("Optimal solution not found.")
+            grades.add_message("\tstudent solution length:\n%s" % len(solution))
+            grades.add_message("")
+            grades.add_message("\tcorrect solution length:\n%s" % gold_length)
             return False
 
-        grades.addMessage("PASS: %s" % self.path)
-        grades.addMessage("\tpacman layout:\t\t%s" % self.layoutName)
-        grades.addMessage("\tsolution length:\t\t%s" % len(solution))
+        grades.add_message("PASS: %s" % self.path)
+        grades.add_message("\tpacman layout:\t\t%s" % self.layout_name)
+        grades.add_message("\tsolution length:\t\t%s" % len(solution))
         return True
 
-    def writeSolution(self, moduleDict, filePath):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def write_solution(self, module_dict, file_path):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         # open file and write comments
-        handle = open(filePath, "w")
+        handle = open(file_path, "w")
         handle.write("# This is the solution file for %s.\n" % self.path)
 
-        print("Solving problem", self.layoutName)
-        print(self.layoutText)
+        print("Solving problem", self.layout_name)
+        print(self.layout_text)
 
-        path, _ = self.solution(search, searchAgents)
+        path, _ = self.solution(search, search_agents)
         length = len(path)
         print("Problem solved")
 
@@ -528,15 +528,15 @@ class CornerProblemTest(testClasses.TestCase):
 
 # template = """class: "HeuristicTest"
 #
-# heuristic: "foodHeuristic"
-# searchProblemClass: "FoodSearchProblem"
-# layoutName: "Test %s"
+# heuristic: "food_heuristic"
+# search_problem_class: "FoodSearchProblem"
+# layout_name: "Test %s"
 # layout: \"\"\"
 # %s
 # \"\"\"
 # """
 #
-# for i, (_, _, l) in enumerate(doneTests + foodTests):
+# for i, (_, _, l) in enumerate(done_tests + food_tests):
 #     f = open("food_heuristic_%s.test" % (i+1), "w")
 #     f.write(template % (i+1, "\n".join(l)))
 #     f.close()
@@ -565,29 +565,29 @@ def heuristic_error_message(current_heuristic, current_state, next_heuristic, ne
     """
         
 
-class HeuristicTest(testClasses.TestCase):
-    def __init__(self, question, testDict):
-        super(HeuristicTest, self).__init__(question, testDict)
-        self.layoutText = testDict["layout"]
-        self.layoutName = testDict["layoutName"]
-        self.searchProblemClassName = testDict["searchProblemClass"]
-        self.heuristicName = testDict["heuristic"]
+class HeuristicTest(test_classes.TestCase):
+    def __init__(self, question, test_dict):
+        super(HeuristicTest, self).__init__(question, test_dict)
+        self.layout_text = test_dict["layout"]
+        self.layout_name = test_dict["layout_name"]
+        self.search_problem_class_name = test_dict["search_problem_class"]
+        self.heuristic_name = test_dict["heuristic"]
 
-    def setupProblem(self, searchAgents):
-        lay = layout.Layout([l.strip() for l in self.layoutText.split("\n")])
-        gameState = pacman.GameState()
-        gameState.initialize(lay, 0)
-        problemClass = getattr(searchAgents, self.searchProblemClassName)
-        problem = problemClass(gameState)
-        state = problem.getStartState()
-        heuristic = getattr(searchAgents, self.heuristicName)
+    def setup_problem(self, search_agents):
+        lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
+        game_state = pacman.GameState()
+        game_state.initialize(lay, 0)
+        problem_class = getattr(search_agents, self.search_problem_class_name)
+        problem = problem_class(game_state)
+        state = problem.get_start_state()
+        heuristic = getattr(search_agents, self.heuristic_name)
 
         return problem, state, heuristic
 
-    def checkHeuristic(self, heuristic, problem, state, solutionCost):
+    def check_heuristic(self, heuristic, problem, state, solution_cost):
         current_state_heuristic = heuristic(state, problem)
 
-        if solutionCost == 0:
+        if solution_cost == 0:
             if current_state_heuristic == 0:
                 return True, ""
             else:
@@ -597,14 +597,14 @@ class HeuristicTest(testClasses.TestCase):
             return False, "Heuristic failed H >= 0 test"
         if not current_state_heuristic > 0:
             return False, "Heuristic failed non-triviality (e.g. > 0) test"
-        if not current_state_heuristic <= solutionCost:
+        if not current_state_heuristic <= solution_cost:
             return False, "Heuristic failed admissibility test"
 
-        for each_successor, action, stepCost in problem.getSuccessors(state):
+        for each_successor, action, step_cost in problem.get_successors(state):
             next_heuristic = heuristic(each_successor, problem)
             if next_heuristic < 0:
                 return False, "Heuristic failed H >= 0 test"
-            if current_state_heuristic - next_heuristic > stepCost:
+            if current_state_heuristic - next_heuristic > step_cost:
                 return False, heuristic_error_message(
                     current_heuristic=current_state_heuristic,
                     next_heuristic=next_heuristic,
@@ -614,34 +614,34 @@ class HeuristicTest(testClasses.TestCase):
 
         return True, ""
 
-    def execute(self, grades, moduleDict, solutionDict):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
-        solutionCost = int(solutionDict["solution_cost"])
-        problem, state, heuristic = self.setupProblem(searchAgents)
+    def execute(self, grades, module_dict, solution_dict):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
+        solution_cost = int(solution_dict["solution_cost"])
+        problem, state, heuristic = self.setup_problem(search_agents)
 
-        passed, message = self.checkHeuristic(heuristic, problem, state, solutionCost)
+        passed, message = self.check_heuristic(heuristic, problem, state, solution_cost)
 
         if not passed:
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("%s" % message)
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("%s" % message)
             return False
         else:
-            grades.addMessage("PASS: %s" % self.path)
+            grades.add_message("PASS: %s" % self.path)
             return True
 
-    def writeSolution(self, moduleDict, filePath):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def write_solution(self, module_dict, file_path):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         # open file and write comments
-        handle = open(filePath, "w")
+        handle = open(file_path, "w")
         handle.write("# This is the solution file for %s.\n" % self.path)
 
-        print("Solving problem", self.layoutName, self.heuristicName)
-        print(self.layoutText)
-        problem, _, heuristic = self.setupProblem(searchAgents)
+        print("Solving problem", self.layout_name, self.heuristic_name)
+        print(self.layout_text)
+        problem, _, heuristic = self.setup_problem(search_agents)
         path = search.astar(problem, heuristic)
-        cost = problem.getCostOfActions(path)
+        cost = problem.get_cost_of_actions(path)
         print("Problem solved")
 
         handle.write('solution_cost: "%s"\n' % cost)
@@ -649,59 +649,59 @@ class HeuristicTest(testClasses.TestCase):
         return True
 
 
-class HeuristicGrade(testClasses.TestCase):
-    def __init__(self, question, testDict):
-        super(HeuristicGrade, self).__init__(question, testDict)
-        self.layoutText = testDict["layout"]
-        self.layoutName = testDict["layoutName"]
-        self.searchProblemClassName = testDict["searchProblemClass"]
-        self.heuristicName = testDict["heuristic"]
-        self.basePoints = int(testDict["basePoints"])
-        self.thresholds = [int(t) for t in testDict["gradingThresholds"].split()]
+class HeuristicGrade(test_classes.TestCase):
+    def __init__(self, question, test_dict):
+        super(HeuristicGrade, self).__init__(question, test_dict)
+        self.layout_text = test_dict["layout"]
+        self.layout_name = test_dict["layout_name"]
+        self.search_problem_class_name = test_dict["search_problem_class"]
+        self.heuristic_name = test_dict["heuristic"]
+        self.base_points = int(test_dict["base_points"])
+        self.thresholds = [int(t) for t in test_dict["grading_thresholds"].split()]
 
-    def setupProblem(self, searchAgents):
-        lay = layout.Layout([l.strip() for l in self.layoutText.split("\n")])
-        gameState = pacman.GameState()
-        gameState.initialize(lay, 0)
-        problemClass = getattr(searchAgents, self.searchProblemClassName)
-        problem = problemClass(gameState)
-        state = problem.getStartState()
-        heuristic = getattr(searchAgents, self.heuristicName)
+    def setup_problem(self, search_agents):
+        lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
+        game_state = pacman.GameState()
+        game_state.initialize(lay, 0)
+        problem_class = getattr(search_agents, self.search_problem_class_name)
+        problem = problem_class(game_state)
+        state = problem.get_start_state()
+        heuristic = getattr(search_agents, self.heuristic_name)
 
         return problem, state, heuristic
 
-    def execute(self, grades, moduleDict, solutionDict):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
-        problem, _, heuristic = self.setupProblem(searchAgents)
+    def execute(self, grades, module_dict, solution_dict):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
+        problem, _, heuristic = self.setup_problem(search_agents)
 
         path = search.astar(problem, heuristic)
 
         expanded = problem._expanded
 
-        if not checkSolution(problem, path):
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("\tReturned path is not a solution.")
-            grades.addMessage("\tpath returned by astar: %s" % expanded)
+        if not check_solution(problem, path):
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("\tReturned path is not a solution.")
+            grades.add_message("\tpath returned by astar: %s" % expanded)
             return False
 
-        grades.addPoints(self.basePoints)
+        grades.add_points(self.base_points)
         points = 0
         for threshold in self.thresholds:
             if expanded <= threshold:
                 points += 1
-        grades.addPoints(points)
+        grades.add_points(points)
         if points >= len(self.thresholds):
-            grades.addMessage("PASS: %s" % self.path)
+            grades.add_message("PASS: %s" % self.path)
         else:
-            grades.addMessage("FAIL: %s" % self.path)
-        grades.addMessage("\texpanded nodes: %s" % expanded)
-        grades.addMessage("\tthresholds: %s" % self.thresholds)
+            grades.add_message("FAIL: %s" % self.path)
+        grades.add_message("\texpanded nodes: %s" % expanded)
+        grades.add_message("\tthresholds: %s" % self.thresholds)
 
         return True
 
-    def writeSolution(self, moduleDict, filePath):
-        handle = open(filePath, "w")
+    def write_solution(self, module_dict, file_path):
+        handle = open(file_path, "w")
         handle.write("# This is the solution file for %s.\n" % self.path)
         handle.write("# File intentionally blank.\n")
         handle.close()
@@ -710,68 +710,68 @@ class HeuristicGrade(testClasses.TestCase):
 
 # template = """class: "ClosestDotTest"
 #
-# layoutName: "Test %s"
+# layout_name: "Test %s"
 # layout: \"\"\"
 # %s
 # \"\"\"
 # """
 #
-# for i, (_, _, l) in enumerate(foodTests):
+# for i, (_, _, l) in enumerate(food_tests):
 #     f = open("closest_dot_%s.test" % (i+1), "w")
 #     f.write(template % (i+1, "\n".join(l)))
 #     f.close()
 
 
-class ClosestDotTest(testClasses.TestCase):
-    def __init__(self, question, testDict):
-        super(ClosestDotTest, self).__init__(question, testDict)
-        self.layoutText = testDict["layout"]
-        self.layoutName = testDict["layoutName"]
+class ClosestDotTest(test_classes.TestCase):
+    def __init__(self, question, test_dict):
+        super(ClosestDotTest, self).__init__(question, test_dict)
+        self.layout_text = test_dict["layout"]
+        self.layout_name = test_dict["layout_name"]
 
-    def solution(self, searchAgents):
-        lay = layout.Layout([l.strip() for l in self.layoutText.split("\n")])
-        gameState = pacman.GameState()
-        gameState.initialize(lay, 0)
-        path = searchAgents.ClosestDotSearchAgent().findPathToClosestDot(gameState)
+    def solution(self, search_agents):
+        lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
+        game_state = pacman.GameState()
+        game_state.initialize(lay, 0)
+        path = search_agents.ClosestDotSearchAgent().find_path_to_closest_dot(game_state)
         return path
 
-    def execute(self, grades, moduleDict, solutionDict):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
-        gold_length = int(solutionDict["solution_length"])
-        solution = self.solution(searchAgents)
+    def execute(self, grades, module_dict, solution_dict):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
+        gold_length = int(solution_dict["solution_length"])
+        solution = self.solution(search_agents)
 
         if type(solution) != type([]):
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage(
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message(
                 "\tThe result must be a list. (Instead, it is %s)" % type(solution)
             )
             return False
 
         if len(solution) != gold_length:
-            grades.addMessage("FAIL: %s" % self.path)
-            grades.addMessage("Closest dot not found.")
-            grades.addMessage("\tstudent solution length:\n%s" % len(solution))
-            grades.addMessage("")
-            grades.addMessage("\tcorrect solution length:\n%s" % gold_length)
+            grades.add_message("FAIL: %s" % self.path)
+            grades.add_message("Closest dot not found.")
+            grades.add_message("\tstudent solution length:\n%s" % len(solution))
+            grades.add_message("")
+            grades.add_message("\tcorrect solution length:\n%s" % gold_length)
             return False
 
-        grades.addMessage("PASS: %s" % self.path)
-        grades.addMessage("\tpacman layout:\t\t%s" % self.layoutName)
-        grades.addMessage("\tsolution length:\t\t%s" % len(solution))
+        grades.add_message("PASS: %s" % self.path)
+        grades.add_message("\tpacman layout:\t\t%s" % self.layout_name)
+        grades.add_message("\tsolution length:\t\t%s" % len(solution))
         return True
 
-    def writeSolution(self, moduleDict, filePath):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def write_solution(self, module_dict, file_path):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         # open file and write comments
-        handle = open(filePath, "w")
+        handle = open(file_path, "w")
         handle.write("# This is the solution file for %s.\n" % self.path)
 
-        print("Solving problem", self.layoutName)
-        print(self.layoutText)
+        print("Solving problem", self.layout_name)
+        print(self.layout_text)
 
-        length = len(self.solution(searchAgents))
+        length = len(self.solution(search_agents))
         print("Problem solved")
 
         handle.write('solution_length: "%s"\n' % length)
@@ -779,86 +779,86 @@ class ClosestDotTest(testClasses.TestCase):
         return True
 
 
-class CornerHeuristicSanity(testClasses.TestCase):
-    def __init__(self, question, testDict):
-        super(CornerHeuristicSanity, self).__init__(question, testDict)
-        self.layout_text = testDict["layout"]
+class CornerHeuristicSanity(test_classes.TestCase):
+    def __init__(self, question, test_dict):
+        super(CornerHeuristicSanity, self).__init__(question, test_dict)
+        self.layout_text = test_dict["layout"]
 
-    def execute(self, grades, moduleDict, solutionDict):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def execute(self, grades, module_dict, solution_dict):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         game_state = pacman.GameState()
         lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
         game_state.initialize(lay, 0)
-        problem = searchAgents.CornersProblem(game_state)
-        start_state = problem.getStartState()
-        start_state_heuristic = searchAgents.cornersHeuristic(start_state, problem)
-        successors = problem.getSuccessors(start_state)
+        problem = search_agents.CornersProblem(game_state)
+        start_state = problem.get_start_state()
+        start_state_heuristic = search_agents.corners_heuristic(start_state, problem)
+        successors = problem.get_successors(start_state)
             
-        # cornerConsistencyA
+        # corner_consistency_a
         for each_state, *_ in successors:
-            successor_heuristic = searchAgents.cornersHeuristic(each_state, problem)
+            successor_heuristic = search_agents.corners_heuristic(each_state, problem)
             if start_state_heuristic - successor_heuristic > 1:
-                grades.addMessage(heuristic_error_message(
+                grades.add_message(heuristic_error_message(
                     current_heuristic=start_state_heuristic,
                     next_heuristic=successor_heuristic,
                     current_state=start_state,
                     next_state=each_state
                 ))
                 return False
-        heuristic_cost = searchAgents.cornersHeuristic(start_state, problem)
-        true_cost = float(solutionDict["cost"])
-        # cornerNontrivial
+        heuristic_cost = search_agents.corners_heuristic(start_state, problem)
+        true_cost = float(solution_dict["cost"])
+        # corner_nontrivial
         if heuristic_cost == 0:
-            grades.addMessage("FAIL: must use non-trivial heuristic")
-            grades.addMessage("    aka: heuristic_cost == 0")
+            grades.add_message("FAIL: must use non-trivial heuristic")
+            grades.add_message("    aka: heuristic_cost == 0")
             return False
-        # cornerAdmissible
+        # corner_admissible
         if heuristic_cost > true_cost:
-            grades.addMessage("FAIL: Inadmissible heuristic")
-            grades.addMessage("     aka: heuristic_cost > true_cost")
+            grades.add_message("FAIL: Inadmissible heuristic")
+            grades.add_message("     aka: heuristic_cost > true_cost")
             return False
-        path = solutionDict["path"].split()
-        states = followPath(path, problem)
+        path = solution_dict["path"].split()
+        states = follow_path(path, problem)
         heuristics = []
         for state in states:
-            heuristics.append(searchAgents.cornersHeuristic(state, problem))
+            heuristics.append(search_agents.corners_heuristic(state, problem))
         
         pairwise_heuristics = zip(heuristics[0:-1], heuristics[1:])
         pairwise_states = zip(states[0:-1], states[1:])
         for (current_heuristic, next_heuristic), (current_state, next_state) in zip(pairwise_heuristics, pairwise_states):
-            # cornerConsistencyB
+            # corner_consistency_b
             if current_heuristic - next_heuristic > 1:
-                grades.addMessage(heuristic_error_message(
+                grades.add_message(heuristic_error_message(
                     current_heuristic=current_heuristic,
                     next_heuristic=next_heuristic,
                     current_state=current_state,
                     next_state=next_state,
                 ))
                 return False
-            # cornerPosH
+            # corner_pos_h
             if current_heuristic < 0:
-                grades.addMessage("FAIL: non-positive heuristic for state: "+str(current_state))
+                grades.add_message("FAIL: non-positive heuristic for state: "+str(current_state))
                 return False
             if next_heuristic < 0:
-                grades.addMessage("FAIL: non-positive heuristic for state: "+str(next_state))
+                grades.add_message("FAIL: non-positive heuristic for state: "+str(next_state))
                 return False
-        # cornerGoalH
+        # corner_goal_h
         if heuristics[-1] != 0:
-            grades.addMessage("")
-            grades.addMessage("FAIL: heuristic non-zero at goal state")
-            grades.addMessage("    heuristic: "+str(heuristics[-1]))
-            grades.addMessage("    goal state: "+str(states[-1]))
-            grades.addMessage("")
+            grades.add_message("")
+            grades.add_message("FAIL: heuristic non-zero at goal state")
+            grades.add_message("    heuristic: "+str(heuristics[-1]))
+            grades.add_message("    goal state: "+str(states[-1]))
+            grades.add_message("")
             return False
-        grades.addMessage("PASS: heuristic value less than true cost at start state")
+        grades.add_message("PASS: heuristic value less than true cost at start state")
         return True
 
-    def writeSolution(self, moduleDict, filePath):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def write_solution(self, module_dict, file_path):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         # write comment
-        handle = open(filePath, "w")
+        handle = open(file_path, "w")
         handle.write("# In order for a heuristic to be admissible, the value\n")
         handle.write("# of the heuristic must be less at each state than the\n")
         handle.write("# true cost of the optimal path from that state to a goal.\n")
@@ -867,61 +867,61 @@ class CornerHeuristicSanity(testClasses.TestCase):
         lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
         start_state = pacman.GameState()
         start_state.initialize(lay, 0)
-        problem = searchAgents.CornersProblem(start_state)
-        solution = search.astar(problem, searchAgents.cornersHeuristic)
+        problem = search_agents.CornersProblem(start_state)
+        solution = search.astar(problem, search_agents.corners_heuristic)
         handle.write('cost: "%d"\n' % len(solution))
         handle.write('path: """\n%s\n"""\n' % wrap_solution(solution))
         handle.close()
         return True
 
 
-class CornerHeuristicPacman(testClasses.TestCase):
-    def __init__(self, question, testDict):
-        super(CornerHeuristicPacman, self).__init__(question, testDict)
-        self.layout_text = testDict["layout"]
+class CornerHeuristicPacman(test_classes.TestCase):
+    def __init__(self, question, test_dict):
+        super(CornerHeuristicPacman, self).__init__(question, test_dict)
+        self.layout_text = test_dict["layout"]
 
-    def execute(self, grades, moduleDict, solutionDict):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def execute(self, grades, module_dict, solution_dict):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         total = 0
-        true_cost = float(solutionDict["cost"])
-        thresholds = list(map(int, solutionDict["thresholds"].split()))
+        true_cost = float(solution_dict["cost"])
+        thresholds = list(map(int, solution_dict["thresholds"].split()))
         game_state = pacman.GameState()
         lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
         game_state.initialize(lay, 0)
-        problem = searchAgents.CornersProblem(game_state)
-        start_state = problem.getStartState()
-        if searchAgents.cornersHeuristic(start_state, problem) > true_cost:
-            grades.addMessage("FAIL: Inadmissible heuristic")
+        problem = search_agents.CornersProblem(game_state)
+        start_state = problem.get_start_state()
+        if search_agents.corners_heuristic(start_state, problem) > true_cost:
+            grades.add_message("FAIL: Inadmissible heuristic")
             return False
-        path = search.astar(problem, searchAgents.cornersHeuristic)
+        path = search.astar(problem, search_agents.corners_heuristic)
         print("path:", path)
         print("path length:", len(path))
-        cost = problem.getCostOfActions(path)
+        cost = problem.get_cost_of_actions(path)
         if cost > true_cost:
-            grades.addMessage("FAIL: Inconsistent heuristic")
+            grades.add_message("FAIL: Inconsistent heuristic")
             return False
         expanded = problem._expanded
         points = 0
         for threshold in thresholds:
             if expanded <= threshold:
                 points += 1
-        grades.addPoints(points)
+        grades.add_points(points)
         if points >= len(thresholds):
-            grades.addMessage(
+            grades.add_message(
                 "PASS: Heuristic resulted in expansion of %d nodes" % expanded
             )
         else:
-            grades.addMessage(
+            grades.add_message(
                 "FAIL: Heuristic resulted in expansion of %d nodes" % expanded
             )
         return True
 
-    def writeSolution(self, moduleDict, filePath):
-        search = moduleDict["search"]
-        searchAgents = moduleDict["searchAgents"]
+    def write_solution(self, module_dict, file_path):
+        search = module_dict["search"]
+        search_agents = module_dict["search_agents"]
         # write comment
-        handle = open(filePath, "w")
+        handle = open(file_path, "w")
         handle.write("# This solution file specifies the length of the optimal path\n")
         handle.write("# as well as the thresholds on number of nodes expanded to be\n")
         handle.write("# used in scoring.\n")
@@ -930,8 +930,8 @@ class CornerHeuristicPacman(testClasses.TestCase):
         lay = layout.Layout([l.strip() for l in self.layout_text.split("\n")])
         start_state = pacman.GameState()
         start_state.initialize(lay, 0)
-        problem = searchAgents.CornersProblem(start_state)
-        solution = search.astar(problem, searchAgents.cornersHeuristic)
+        problem = search_agents.CornersProblem(start_state)
+        solution = search.astar(problem, search_agents.corners_heuristic)
         handle.write('cost: "%d"\n' % len(solution))
         handle.write('path: """\n%s\n"""\n' % wrap_solution(solution))
         handle.write('thresholds: "2000 1600 1200"\n')

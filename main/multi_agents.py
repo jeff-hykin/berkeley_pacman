@@ -1,4 +1,4 @@
-# multiAgents.py
+# multi_agents.py
 # --------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -13,7 +13,7 @@
 
 
 from builtins import range
-from util import manhattanDistance
+from util import manhattan_distance
 from game import Directions
 import random, util
 
@@ -30,29 +30,29 @@ class ReflexAgent(Agent):
     """
 
 
-    def getAction(self, gameState):
+    def get_action(self, game_state):
         """
         You do not need to change this method, but you're welcome to.
 
-        getAction chooses among the best options according to the evaluation function.
+        get_action chooses among the best options according to the evaluation function.
 
-        Just like in the previous project, getAction takes a GameState and returns
+        Just like in the previous project, get_action takes a GameState and returns
         some Directions.X for some X in the set {North, South, West, East, Stop}
         """
         # Collect legal moves and successor states
-        legalMoves = gameState.getLegalActions()
+        legal_moves = game_state.get_legal_actions()
 
         # Choose one of the best actions
-        scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
-        bestScore = max(scores)
-        bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+        scores = [self.evaluation_function(game_state, action) for action in legal_moves]
+        best_score = max(scores)
+        best_indices = [index for index in range(len(scores)) if scores[index] == best_score]
+        chosen_index = random.choice(best_indices) # Pick randomly among the best
 
         "Add more of your code here if you want to"
 
-        return legalMoves[chosenIndex]
+        return legal_moves[chosen_index]
 
-    def evaluationFunction(self, currentGameState, action):
+    def evaluation_function(self, current_game_state, action):
         """
         Design a better evaluation function here.
 
@@ -60,24 +60,24 @@ class ReflexAgent(Agent):
         GameStates (pacman.py) and returns a number, where higher numbers are better.
 
         The code below extracts some useful information from the state, like the
-        remaining food (newFood) and Pacman position after moving (newPos).
-        newScaredTimes holds the number of moves that each ghost will remain
+        remaining food (new_food) and Pacman position after moving (new_pos).
+        new_scared_times holds the number of moves that each ghost will remain
         scared because of Pacman having eaten a power pellet.
 
         Print out these variables to see what you're getting, then combine them
         to create a masterful evaluation function.
         """
         # Useful information you can extract from a GameState (pacman.py)
-        successorGameState = currentGameState.generatePacmanSuccessor(action)
-        newPos = successorGameState.getPacmanPosition()
-        newFood = successorGameState.getFood()
-        newGhostStates = successorGameState.getGhostStates()
-        newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
+        successor_game_state = current_game_state.generate_pacman_successor(action)
+        new_pos = successor_game_state.get_pacman_position()
+        new_food = successor_game_state.get_food()
+        new_ghost_states = successor_game_state.get_ghost_states()
+        new_scared_times = [ghost_state.scared_timer for ghost_state in new_ghost_states]
 
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+        return successor_game_state.get_score()
 
-def scoreEvaluationFunction(currentGameState):
+def score_evaluation_function(current_game_state):
     """
       This default evaluation function just returns the score of the state.
       The score is the same one displayed in the Pacman GUI.
@@ -85,7 +85,7 @@ def scoreEvaluationFunction(currentGameState):
       This evaluation function is meant for use with adversarial search agents
       (not reflex agents).
     """
-    return currentGameState.getScore()
+    return current_game_state.get_score()
 
 class MultiAgentSearchAgent(Agent):
     """
@@ -102,9 +102,9 @@ class MultiAgentSearchAgent(Agent):
       is another abstract class.
     """
 
-    def __init__(self, evalFn = 'scoreEvaluationFunction', depth = '2'):
+    def __init__(self, eval_fn = 'score_evaluation_function', depth = '2'):
         self.index = 0 # Pacman is always agent index 0
-        self.evaluationFunction = util.lookup(evalFn, globals())
+        self.evaluation_function = util.lookup(eval_fn, globals())
         self.depth = int(depth)
 
 class MinimaxAgent(MultiAgentSearchAgent):
@@ -112,54 +112,54 @@ class MinimaxAgent(MultiAgentSearchAgent):
       Your minimax agent (question 2)
     """
 
-    def getAction(self, gameState):
+    def get_action(self, game_state):
         """
-          Returns the minimax action from the current gameState using self.depth
-          and self.evaluationFunction.
+          Returns the minimax action from the current game_state using self.depth
+          and self.evaluation_function.
 
           Here are some method calls that might be useful when implementing minimax.
 
-          gameState.getLegalActions(agentIndex):
+          game_state.get_legal_actions(agent_index):
             Returns a list of legal actions for an agent
-            agentIndex=0 means Pacman, ghosts are >= 1
+            agent_index=0 means Pacman, ghosts are >= 1
 
-          gameState.generateSuccessor(agentIndex, action):
+          game_state.generate_successor(agent_index, action):
             Returns the successor game state after an agent takes an action
 
-          gameState.getNumAgents():
+          game_state.get_num_agents():
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        util.raise_not_defined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
       Your minimax agent with alpha-beta pruning (question 3)
     """
 
-    def getAction(self, gameState):
+    def get_action(self, game_state):
         """
-          Returns the minimax action using self.depth and self.evaluationFunction
+          Returns the minimax action using self.depth and self.evaluation_function
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        util.raise_not_defined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
       Your expectimax agent (question 4)
     """
 
-    def getAction(self, gameState):
+    def get_action(self, game_state):
         """
-          Returns the expectimax action using self.depth and self.evaluationFunction
+          Returns the expectimax action using self.depth and self.evaluation_function
 
           All ghosts should be modeled as choosing uniformly at random from their
           legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        util.raise_not_defined()
 
-def betterEvaluationFunction(currentGameState):
+def better_evaluation_function(current_game_state):
     """
       Your extreme ghost-hunting, pellet-nabbing, food-gobbling, unstoppable
       evaluation function (question 5).
@@ -167,8 +167,8 @@ def betterEvaluationFunction(currentGameState):
       DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    util.raise_not_defined()
 
 # Abbreviation
-better = betterEvaluationFunction
+better = better_evaluation_function
 

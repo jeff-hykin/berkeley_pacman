@@ -5,7 +5,7 @@ depth: "3"
 diagram: """
         root
        /    \
- minLeft  minRight
+ min_left  min_right
   / \       /    \
  A   B     C   deeper
  4   3     2     |
@@ -19,13 +19,13 @@ win_states: "A C"
 lose_states: "B D"
 
 successors: """
-root pacLeft minLeft
-root pacRight minRight
-minLeft gLeft A
-minLeft gRight B
-minRight gLeft C
-minRight gRight deeper
-deeper pacLeft D
+root pac_left min_left
+root pac_right min_right
+min_left g_left A
+min_left g_right B
+min_right g_left C
+min_right g_right deeper
+deeper pac_left D
 """
 
 evaluation: """

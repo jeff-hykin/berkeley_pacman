@@ -65,9 +65,9 @@ class EightPuzzleState(object):
             for col in range(3):
                 self.cells[row].append(numbers.pop())
                 if self.cells[row][col] == 0:
-                    self.blankLocation = row, col
+                    self.blank_location = row, col
 
-    def isGoal(self):
+    def is_goal(self):
         """
           Checks to see if the puzzle is in its goal state.
 
@@ -79,10 +79,10 @@ class EightPuzzleState(object):
             | 6 | 7 | 8 |
             -------------
 
-        >>> EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8]).isGoal()
+        >>> EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8]).is_goal()
         True
 
-        >>> EightPuzzleState([1, 0, 2, 3, 4, 5, 6, 7, 8]).isGoal()
+        >>> EightPuzzleState([1, 0, 2, 3, 4, 5, 6, 7, 8]).is_goal()
         False
         """
         current = 0
@@ -93,18 +93,18 @@ class EightPuzzleState(object):
                 current += 1
         return True
 
-    def legalMoves(self):
+    def legal_moves(self):
         """
           Returns a list of legal moves from the current state.
 
         Moves consist of moving the blank space up, down, left or right.
         These are encoded as 'up', 'down', 'left' and 'right' respectively.
 
-        >>> EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8]).legalMoves()
+        >>> EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8]).legal_moves()
         ['down', 'right']
         """
         moves = []
-        row, col = self.blankLocation
+        row, col = self.blank_location
         if row != 0:
             moves.append("up")
         if row != 2:
@@ -117,17 +117,17 @@ class EightPuzzleState(object):
 
     def result(self, move):
         """
-          Returns a new eightPuzzle with the current state and blankLocation
+          Returns a new eight_puzzle with the current state and blank_location
         updated based on the provided move.
 
-        The move should be a string drawn from a list returned by legalMoves.
+        The move should be a string drawn from a list returned by legal_moves.
         Illegal moves will raise an exception, which may be an array bounds
         exception.
 
         NOTE: This function *does not* change the current object.  Instead,
         it returns a new object.
         """
-        row, col = self.blankLocation
+        row, col = self.blank_location
         if move == "up":
             newrow = row - 1
             newcol = col
@@ -143,20 +143,20 @@ class EightPuzzleState(object):
         else:
             raise Exception("Illegal Move")
 
-        # Create a copy of the current eightPuzzle
-        newPuzzle = EightPuzzleState([0, 0, 0, 0, 0, 0, 0, 0, 0])
-        newPuzzle.cells = [values[:] for values in self.cells]
+        # Create a copy of the current eight_puzzle
+        new_puzzle = EightPuzzleState([0, 0, 0, 0, 0, 0, 0, 0, 0])
+        new_puzzle.cells = [values[:] for values in self.cells]
         # And update it to reflect the move
-        newPuzzle.cells[row][col] = self.cells[newrow][newcol]
-        newPuzzle.cells[newrow][newcol] = self.cells[row][col]
-        newPuzzle.blankLocation = newrow, newcol
+        new_puzzle.cells[row][col] = self.cells[newrow][newcol]
+        new_puzzle.cells[newrow][newcol] = self.cells[row][col]
+        new_puzzle.blank_location = newrow, newcol
 
-        return newPuzzle
+        return new_puzzle
 
     # Utilities for comparison and display
     def __eq__(self, other):
         """
-            Overloads '==' such that two eightPuzzles with the same configuration
+            Overloads '==' such that two eight_puzzles with the same configuration
           are equal.
 
           >>> EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8]) == \
@@ -176,16 +176,16 @@ class EightPuzzleState(object):
         Returns a display string for the maze
         """
         lines = []
-        horizontalLine = "-" * (13)
-        lines.append(horizontalLine)
+        horizontal_line = "-" * (13)
+        lines.append(horizontal_line)
         for row in self.cells:
-            rowLine = "|"
+            row_line = "|"
             for col in row:
                 if col == 0:
                     col = " "
-                rowLine = rowLine + " " + col.__str__() + " |"
-            lines.append(rowLine)
-            lines.append(horizontalLine)
+                row_line = row_line + " " + col.__str__() + " |"
+            lines.append(row_line)
+            lines.append(horizontal_line)
         return "\n".join(lines)
 
     def __str__(self):
@@ -199,27 +199,27 @@ class EightPuzzleSearchProblem(search.SearchProblem):
     """
     Implementation of a SearchProblem for the  Eight Puzzle domain
 
-    Each state is represented by an instance of an eightPuzzle.
+    Each state is represented by an instance of an eight_puzzle.
     """
 
     def __init__(self, puzzle):
         "Creates a new EightPuzzleSearchProblem which stores search information."
         self.puzzle = puzzle
 
-    def getStartState(self):
+    def get_start_state(self):
         return puzzle
 
-    def isGoalState(self, state):
-        return state.isGoal()
+    def is_goal_state(self, state):
+        return state.is_goal()
 
-    def getSuccessors(self, state):
+    def get_successors(self, state):
         """
-        Returns list of (successor, action, stepCost) pairs where
+        Returns list of (successor, action, step_cost) pairs where
         each succesor is either left, right, up, or down
         from the original state and the cost is 1.0 for each
         """
         succ = []
-        for a in state.legalMoves():
+        for a in state.legal_moves():
             succ.append(
                 tools.Transition((
                     state.result(a),
@@ -229,7 +229,7 @@ class EightPuzzleSearchProblem(search.SearchProblem):
             )
         return succ
 
-    def getCostOfActions(self, actions):
+    def get_cost_of_actions(self, actions):
         """
          actions: A list of actions to take
 
@@ -249,16 +249,16 @@ EIGHT_PUZZLE_DATA = [
 ]
 
 
-def loadEightPuzzle(puzzleNumber):
+def load_eight_puzzle(puzzle_number):
     """
-    puzzleNumber: The number of the eight puzzle to load.
+    puzzle_number: The number of the eight puzzle to load.
 
     Returns an eight puzzle object generated from one of the
     provided puzzles in EIGHT_PUZZLE_DATA.
 
-    puzzleNumber can range from 0 to 5.
+    puzzle_number can range from 0 to 5.
 
-    >>> print loadEightPuzzle(0)
+    >>> print load_eight_puzzle(0)
     -------------
     | 1 |   | 2 |
     -------------
@@ -267,10 +267,10 @@ def loadEightPuzzle(puzzleNumber):
     | 6 | 7 | 8 |
     -------------
     """
-    return EightPuzzleState(EIGHT_PUZZLE_DATA[puzzleNumber])
+    return EightPuzzleState(EIGHT_PUZZLE_DATA[puzzle_number])
 
 
-def createRandomEightPuzzle(moves=100):
+def create_random_eight_puzzle(moves=100):
     """
     moves: number of random moves to apply
 
@@ -281,17 +281,17 @@ def createRandomEightPuzzle(moves=100):
     puzzle = EightPuzzleState([0, 1, 2, 3, 4, 5, 6, 7, 8])
     for i in range(moves):
         # Execute a random legal move
-        puzzle = puzzle.result(random.sample(puzzle.legalMoves(), 1)[0])
+        puzzle = puzzle.result(random.sample(puzzle.legal_moves(), 1)[0])
     return puzzle
 
 
 if __name__ == "__main__":
-    puzzle = createRandomEightPuzzle(25)
+    puzzle = create_random_eight_puzzle(25)
     print("A random puzzle:")
     print(puzzle)
 
     problem = EightPuzzleSearchProblem(puzzle)
-    path = search.breadthFirstSearch(problem)
+    path = search.breadth_first_search(problem)
     print("BFS found a path of %d moves: %s" % (len(path), str(path)))
     curr = puzzle
     i = 1

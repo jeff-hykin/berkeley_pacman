@@ -1,9 +1,9 @@
 class: "PacmanSearchTest"
-algorithm: "uniformCostSearch"
+algorithm: "uniform_cost_search"
 points: "0.5"
 
 # The following specifies the layout to be used 
-layoutName: "testSearch"
+layout_name: "test_search"
 layout: """
 %%%%%
 %.P %
@@ -11,6 +11,6 @@ layout: """
 %.  %
 %%%%%
 """
-searchProblemClass: "FoodSearchProblem"
-leewayFactor: "2"
+search_problem_class: "FoodSearchProblem"
+leeway_factor: "2"
 

@@ -1,6 +1,6 @@
 class: "ClosestDotTest"
 
-layoutName: "Test 3"
+layout_name: "Test 3"
 layout: """
 %%%%%%%
 %    .%

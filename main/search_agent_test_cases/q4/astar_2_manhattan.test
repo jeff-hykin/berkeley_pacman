@@ -1,8 +1,8 @@
 class: "PacmanSearchTest"
-algorithm: "aStarSearch"
+algorithm: "a_star_search"
 
 # The following specifies the layout to be used 
-layoutName: "mediumMaze"
+layout_name: "medium_maze"
 layout: """
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                 P%
@@ -23,5 +23,5 @@ layout: """
 %.         %%%%%%%%%%%%%%%%        %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 """
-leewayFactor: "1.1"
-heuristic: "manhattanHeuristic"
+leeway_factor: "1.1"
+heuristic: "manhattan_heuristic"

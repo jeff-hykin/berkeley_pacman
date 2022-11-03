@@ -1,18 +1,18 @@
 class: "EvalAgentTest"
 
-agentName: "ReflexAgent"
-layoutName: "openClassic"
-maxTime: "120"
-numGames: "10"
+agent_name: "ReflexAgent"
+layout_name: "open_classic"
+max_time: "120"
+num_games: "10"
 
 
-nonTimeoutMinimum: "10"
+non_timeout_minimum: "10"
 
-scoreThresholds: "500 1000"
+score_thresholds: "500 1000"
 
-winsMinimum: "1"
-winsThresholds: "5 10"
+wins_minimum: "1"
+wins_thresholds: "5 10"
 
 
-randomSeed: "0"
+random_seed: "0"
 ghosts: "[RandomGhost(1)]"

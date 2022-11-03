@@ -14,7 +14,7 @@
 
 """
 In search.py, you will implement generic search algorithms which are called by
-Pacman agents (in searchAgents.py).
+Pacman agents (in search_agents.py).
 """
 
 from builtins import object
@@ -29,45 +29,45 @@ class SearchProblem(object):
     You do not need to change anything in this class, ever.
     """
 
-    def getStartState(self):
+    def get_start_state(self):
         """
         Returns the start state for the search problem.
         """
-        util.raiseNotDefined()
+        util.raise_not_defined()
 
-    def isGoalState(self, state):
+    def is_goal_state(self, state):
         """
           state: Search state
 
         Returns True if and only if the state is a valid goal state.
         """
-        util.raiseNotDefined()
+        util.raise_not_defined()
 
-    def getSuccessors(self, state):
+    def get_successors(self, state):
         """
           state: Search state
 
         For a given state, this should return a list of triples, (successor,
-        action, stepCost), where 'successor' is a successor to the current
-        state, 'action' is the action required to get there, and 'stepCost' is
+        action, step_cost), where 'successor' is a successor to the current
+        state, 'action' is the action required to get there, and 'step_cost' is
         the incremental cost of expanding to that successor.
         """
-        util.raiseNotDefined()
+        util.raise_not_defined()
 
-    def getCostOfActions(self, actions):
+    def get_cost_of_actions(self, actions):
         """
          actions: A list of actions to take
 
         This method returns the total cost of a particular sequence of actions.
         The sequence must be composed of legal moves.
         """
-        util.raiseNotDefined()
+        util.raise_not_defined()
 
 
-def tinyMazeSearch(problem):
+def tiny_maze_search(problem):
     """
-    Returns a sequence of moves that solves tinyMaze.  For any other maze, the
-    sequence of moves will be incorrect, so only use this for tinyMaze.
+    Returns a sequence of moves that solves tiny_maze.  For any other maze, the
+    sequence of moves will be incorrect, so only use this for tiny_maze.
     """
     from game import Directions
 
@@ -76,17 +76,17 @@ def tinyMazeSearch(problem):
     return [s, s, w, s, w, w, s, w]
 
 
-def depthFirstSearch(problem):
+def depth_first_search(problem):
     "*** YOUR CODE HERE ***"
     # What does this function need to return?
     #     list of actions that reaches the goal
     # 
     # What data is available?
-    #     start_state = problem.getStartState() # returns a string
+    #     start_state = problem.get_start_state() # returns a string
     # 
-    #     problem.isGoalState(start_state) # returns boolean
+    #     problem.is_goal_state(start_state) # returns boolean
     # 
-    #     transitions = problem.getSuccessors(start_state)
+    #     transitions = problem.get_successors(start_state)
     #     transitions[0].state
     #     transitions[0].action
     #     transitions[0].cost
@@ -99,26 +99,26 @@ def depthFirstSearch(problem):
     #     ]
     # 
     # Example:
-    #     start_state = problem.getStartState()
-    #     transitions = problem.getSuccessors(start_state)
+    #     start_state = problem.get_start_state()
+    #     transitions = problem.get_successors(start_state)
     #     return [  transitions[0].action  ]
     
-    util.raiseNotDefined()
+    util.raise_not_defined()
 
 
-def breadthFirstSearch(problem):
+def breadth_first_search(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    util.raise_not_defined()
 
 
-def uniformCostSearch(problem, heuristic=None):
+def uniform_cost_search(problem, heuristic=None):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    util.raise_not_defined()
 
 
-def nullHeuristic(state, problem=None):
+def null_heuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
     goal in the provided SearchProblem.  This heuristic is trivial.
@@ -126,14 +126,14 @@ def nullHeuristic(state, problem=None):
     return 0
 
 
-def aStarSearch(problem, heuristic=nullHeuristic):
+def a_star_search(problem, heuristic=null_heuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    util.raise_not_defined()
 
 
 # Abbreviations
-bfs = breadthFirstSearch
-dfs = depthFirstSearch
-astar = aStarSearch
-ucs = uniformCostSearch
+bfs = breadth_first_search
+dfs = depth_first_search
+astar = a_star_search
+ucs = uniform_cost_search

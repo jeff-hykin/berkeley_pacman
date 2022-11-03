@@ -1,6 +1,6 @@
 class: "CornerProblemTest"
 
-layoutName: "tinyCorner"
+layout_name: "tiny_corner"
 layout: """
 %%%%%%%%
 %.    .%

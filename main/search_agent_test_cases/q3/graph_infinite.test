@@ -1,6 +1,6 @@
 # Graph where natural action choice leads to an infinite loop
 class: "GraphSearchTest"
-algorithm: "uniformCostSearch"
+algorithm: "uniform_cost_search"
 
 diagram: """
  B <--> C

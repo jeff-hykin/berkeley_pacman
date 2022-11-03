@@ -1,7 +1,7 @@
-def createNamedListClass(names):
+def create_named_list_class(names):
     """
     Example:
-        Position = createNamedListClass(['x','y','z'])
+        Position = create_named_list_class(['x','y','z'])
         a = Position([1,2,3])
         print(a.x)   # 1
         a.x = 4
@@ -98,4 +98,4 @@ def createNamedListClass(names):
     return NamedList
 
 
-Transition = createNamedListClass(['state', 'action', 'cost'])
+Transition = create_named_list_class(['state', 'action', 'cost'])

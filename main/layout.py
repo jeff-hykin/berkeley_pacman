@@ -15,7 +15,7 @@
 from builtins import zip
 from builtins import range
 from builtins import object
-from util import manhattanDistance
+from util import manhattan_distance
 from game import Grid
 import os
 import random
@@ -29,25 +29,25 @@ class Layout(object):
     A Layout manages the static information about the game board.
     """
 
-    def __init__(self, layoutText):
-        self.width = len(layoutText[0])
-        self.height = len(layoutText)
+    def __init__(self, layout_text):
+        self.width = len(layout_text[0])
+        self.height = len(layout_text)
         self.walls = Grid(self.width, self.height, False)
         self.food = Grid(self.width, self.height, False)
         self.capsules = []
-        self.agentPositions = []
-        self.numGhosts = 0
-        self.processLayoutText(layoutText)
-        self.layoutText = layoutText
-        self.totalFood = len(self.food.asList())
-        # self.initializeVisibilityMatrix()
+        self.agent_positions = []
+        self.num_ghosts = 0
+        self.process_layout_text(layout_text)
+        self.layout_text = layout_text
+        self.total_food = len(self.food.as_list())
+        # self.initialize_visibility_matrix()
 
-    def getNumGhosts(self):
-        return self.numGhosts
+    def get_num_ghosts(self):
+        return self.num_ghosts
 
-    def initializeVisibilityMatrix(self):
+    def initialize_visibility_matrix(self):
         global VISIBILITY_MATRIX_CACHE
-        if reduce(str.__add__, self.layoutText) not in VISIBILITY_MATRIX_CACHE:
+        if reduce(str.__add__, self.layout_text) not in VISIBILITY_MATRIX_CACHE:
             from game import Directions
 
             vecs = [(-0.5, 0), (0.5, 0), (0, -0.5), (0, 0.5)]
@@ -80,25 +80,25 @@ class Layout(object):
                                 vis[x][y][direction].add((nextx, nexty))
                                 nextx, nexty = x + dx, y + dy
             self.visibility = vis
-            VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layoutText)] = vis
+            VISIBILITY_MATRIX_CACHE[reduce(str.__add__, self.layout_text)] = vis
         else:
             self.visibility = VISIBILITY_MATRIX_CACHE[
-                reduce(str.__add__, self.layoutText)
+                reduce(str.__add__, self.layout_text)
             ]
 
-    def isWall(self, pos):
+    def is_wall(self, pos):
         x, col = pos
         return self.walls[x][col]
 
-    def getRandomLegalPosition(self):
+    def get_random_legal_position(self):
         x = random.choice(list(range(self.width)))
         y = random.choice(list(range(self.height)))
-        while self.isWall((x, y)):
+        while self.is_wall((x, y)):
             x = random.choice(list(range(self.width)))
             y = random.choice(list(range(self.height)))
         return (x, y)
 
-    def getRandomCorner(self):
+    def get_random_corner(self):
         poses = [
             (1, 1),
             (1, self.height - 2),
@@ -107,27 +107,27 @@ class Layout(object):
         ]
         return random.choice(poses)
 
-    def getFurthestCorner(self, pacPos):
+    def get_furthest_corner(self, pac_pos):
         poses = [
             (1, 1),
             (1, self.height - 2),
             (self.width - 2, 1),
             (self.width - 2, self.height - 2),
         ]
-        dist, pos = max([(manhattanDistance(p, pacPos), p) for p in poses])
+        dist, pos = max([(manhattan_distance(p, pac_pos), p) for p in poses])
         return pos
 
-    def isVisibleFrom(self, ghostPos, pacPos, pacDirection):
-        row, col = [int(x) for x in pacPos]
-        return ghostPos in self.visibility[row][col][pacDirection]
+    def is_visible_from(self, ghost_pos, pac_pos, pac_direction):
+        row, col = [int(x) for x in pac_pos]
+        return ghost_pos in self.visibility[row][col][pac_direction]
 
     def __str__(self):
-        return "\n".join(self.layoutText)
+        return "\n".join(self.layout_text)
 
-    def deepCopy(self):
-        return Layout(self.layoutText[:])
+    def deep_copy(self):
+        return Layout(self.layout_text[:])
 
-    def processLayoutText(self, layoutText):
+    def process_layout_text(self, layout_text):
         """
         Coordinates are flipped from the input format to the (x,y) convention here
 
@@ -140,49 +140,49 @@ class Layout(object):
          P - Pacman
         Other characters are ignored.
         """
-        maxY = self.height - 1
+        max_y = self.height - 1
         for y in range(self.height):
             for x in range(self.width):
-                layoutChar = layoutText[maxY - y][x]
-                self.processLayoutChar(x, y, layoutChar)
-        self.agentPositions.sort()
-        self.agentPositions = [(i == 0, pos) for i, pos in self.agentPositions]
+                layout_char = layout_text[max_y - y][x]
+                self.process_layout_char(x, y, layout_char)
+        self.agent_positions.sort()
+        self.agent_positions = [(i == 0, pos) for i, pos in self.agent_positions]
 
-    def processLayoutChar(self, x, y, layoutChar):
-        if layoutChar == "%":
+    def process_layout_char(self, x, y, layout_char):
+        if layout_char == "%":
             self.walls[x][y] = True
-        elif layoutChar == ".":
+        elif layout_char == ".":
             self.food[x][y] = True
-        elif layoutChar == "o":
+        elif layout_char == "o":
             self.capsules.append((x, y))
-        elif layoutChar == "P":
-            self.agentPositions.append((0, (x, y)))
-        elif layoutChar in ["G"]:
-            self.agentPositions.append((1, (x, y)))
-            self.numGhosts += 1
-        elif layoutChar in ["1", "2", "3", "4"]:
-            self.agentPositions.append((int(layoutChar), (x, y)))
-            self.numGhosts += 1
+        elif layout_char == "P":
+            self.agent_positions.append((0, (x, y)))
+        elif layout_char in ["G"]:
+            self.agent_positions.append((1, (x, y)))
+            self.num_ghosts += 1
+        elif layout_char in ["1", "2", "3", "4"]:
+            self.agent_positions.append((int(layout_char), (x, y)))
+            self.num_ghosts += 1
 
 
-def getLayout(name, back=2):
+def get_layout(name, back=2):
     if name.endswith(".lay"):
-        layout = tryToLoad("layouts/" + name)
+        layout = try_to_load("layouts/" + name)
         if layout == None:
-            layout = tryToLoad(name)
+            layout = try_to_load(name)
     else:
-        layout = tryToLoad("layouts/" + name + ".lay")
+        layout = try_to_load("layouts/" + name + ".lay")
         if layout == None:
-            layout = tryToLoad(name + ".lay")
+            layout = try_to_load(name + ".lay")
     if layout == None and back >= 0:
         curdir = os.path.abspath(".")
         os.chdir("..")
-        layout = getLayout(name, back - 1)
+        layout = get_layout(name, back - 1)
         os.chdir(curdir)
     return layout
 
 
-def tryToLoad(fullname):
+def try_to_load(fullname):
     if not os.path.exists(fullname):
         return None
     f = open(fullname)

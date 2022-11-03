@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-# testClasses.py
+# test_classes.py
 # --------------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -25,62 +25,62 @@ import sys
 # maximum number of points they are worth, and are composed of a series of
 # test cases
 class Question(object):
-    def raiseNotDefined(self):
+    def raise_not_defined(self):
         print("Method not implemented: %s" % inspect.stack()[1][3])
         sys.exit(1)
 
-    def __init__(self, questionDict, display):
-        self.maxPoints = int(questionDict["max_points"])
-        self.testCases = []
+    def __init__(self, question_dict, display):
+        self.max_points = int(question_dict["max_points"])
+        self.test_cases = []
         self.display = display
 
-    def getDisplay(self):
+    def get_display(self):
         return self.display
 
-    def getMaxPoints(self):
-        return self.maxPoints
+    def get_max_points(self):
+        return self.max_points
 
     # Note that 'thunk' must be a function which accepts a single argument,
     # namely a 'grading' object
-    def addTestCase(self, testCase, thunk):
-        self.testCases.append((testCase, thunk))
+    def add_test_case(self, test_case, thunk):
+        self.test_cases.append((test_case, thunk))
 
     def execute(self, grades):
-        self.raiseNotDefined()
+        self.raise_not_defined()
 
 
 # Question in which all test cases must be passed in order to receive credit
 class PassAllTestsQuestion(Question):
     def execute(self, grades):
         # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
-        testsFailed = False
-        grades.assignZeroCredit()
-        for _, f in self.testCases:
+        tests_failed = False
+        grades.assign_zero_credit()
+        for _, f in self.test_cases:
             if not f(grades):
-                testsFailed = True
-        if testsFailed:
+                tests_failed = True
+        if tests_failed:
             grades.fail("Tests failed.")
         else:
-            grades.assignFullCredit()
+            grades.assign_full_credit()
 
 
 class ExtraCreditPassAllTestsQuestion(Question):
-    def __init__(self, questionDict, display):
-        Question.__init__(self, questionDict, display)
-        self.extraPoints = int(questionDict["extra_points"])
+    def __init__(self, question_dict, display):
+        Question.__init__(self, question_dict, display)
+        self.extra_points = int(question_dict["extra_points"])
 
     def execute(self, grades):
         # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
-        testsFailed = False
-        grades.assignZeroCredit()
-        for _, f in self.testCases:
+        tests_failed = False
+        grades.assign_zero_credit()
+        for _, f in self.test_cases:
             if not f(grades):
-                testsFailed = True
-        if testsFailed:
+                tests_failed = True
+        if tests_failed:
             grades.fail("Tests failed.")
         else:
-            grades.assignFullCredit()
-            grades.addPoints(self.extraPoints)
+            grades.assign_full_credit()
+            grades.add_points(self.extra_points)
 
 
 # Question in which predict credit is given for test cases with a ``points'' property.
@@ -88,23 +88,23 @@ class ExtraCreditPassAllTestsQuestion(Question):
 class HackedPartialCreditQuestion(Question):
     def execute(self, grades):
         # TODO: is this the right way to use grades?  The autograder doesn't seem to use it.
-        grades.assignZeroCredit()
+        grades.assign_zero_credit()
 
         points = 0
         passed = True
-        for testCase, f in self.testCases:
-            testResult = f(grades)
-            if "points" in testCase.testDict:
-                if testResult:
-                    points += float(testCase.testDict["points"])
+        for test_case, f in self.test_cases:
+            test_result = f(grades)
+            if "points" in test_case.test_dict:
+                if test_result:
+                    points += float(test_case.test_dict["points"])
             else:
-                passed = passed and testResult
+                passed = passed and test_result
 
         ## FIXME: Below terrible hack to match q3's logic
-        if int(points) == self.maxPoints and not passed:
-            grades.assignZeroCredit()
+        if int(points) == self.max_points and not passed:
+            grades.assign_zero_credit()
         else:
-            grades.addPoints(int(points))
+            grades.add_points(int(points))
 
 
 class Q6PartialCreditQuestion(Question):
@@ -112,13 +112,13 @@ class Q6PartialCreditQuestion(Question):
     Partial credit tests will add the required points."""
 
     def execute(self, grades):
-        grades.assignZeroCredit()
+        grades.assign_zero_credit()
 
         results = []
-        for _, f in self.testCases:
+        for _, f in self.test_cases:
             results.append(f(grades))
         if False in results:
-            grades.assignZeroCredit()
+            grades.assign_zero_credit()
 
 
 class PartialCreditQuestion(Question):
@@ -126,11 +126,11 @@ class PartialCreditQuestion(Question):
     Partial credit tests will add the required points."""
 
     def execute(self, grades):
-        grades.assignZeroCredit()
+        grades.assign_zero_credit()
 
-        for _, f in self.testCases:
+        for _, f in self.test_cases:
             if not f(grades):
-                grades.assignZeroCredit()
+                grades.assign_zero_credit()
                 grades.fail("Tests failed.")
                 return False
 
@@ -139,32 +139,32 @@ class NumberPassedQuestion(Question):
     """Grade is the number of test cases passed."""
 
     def execute(self, grades):
-        grades.addPoints([f(grades) for _, f in self.testCases].count(True))
+        grades.add_points([f(grades) for _, f in self.test_cases].count(True))
 
 
 # Template modeling a generic test case
 class TestCase(object):
-    def raiseNotDefined(self):
+    def raise_not_defined(self):
         print("Method not implemented: %s" % inspect.stack()[1][3])
         sys.exit(1)
 
-    def getPath(self):
+    def get_path(self):
         return self.path
 
-    def __init__(self, question, testDict):
+    def __init__(self, question, test_dict):
         self.question = question
-        self.testDict = testDict
-        self.path = testDict["path"]
+        self.test_dict = test_dict
+        self.path = test_dict["path"]
         self.messages = []
 
     def __str__(self):
-        self.raiseNotDefined()
+        self.raise_not_defined()
 
-    def execute(self, grades, moduleDict, solutionDict):
-        self.raiseNotDefined()
+    def execute(self, grades, module_dict, solution_dict):
+        self.raise_not_defined()
 
-    def writeSolution(self, moduleDict, filePath):
-        self.raiseNotDefined()
+    def write_solution(self, module_dict, file_path):
+        self.raise_not_defined()
         return True
 
     # Tests should call the following messages for grading
@@ -173,41 +173,41 @@ class TestCase(object):
     # TODO: this is hairy, but we need to fix grading.py's interface
     # to get a nice hierarchical project - question - test structure,
     # then these should be moved into Question proper.
-    def testPass(self, grades):
-        grades.addMessage("PASS: %s" % (self.path,))
+    def test_pass(self, grades):
+        grades.add_message("PASS: %s" % (self.path,))
         for line in self.messages:
-            grades.addMessage("    %s" % (line,))
+            grades.add_message("    %s" % (line,))
         return True
 
-    def testFail(self, grades):
-        grades.addMessage("FAIL: %s" % (self.path,))
+    def test_fail(self, grades):
+        grades.add_message("FAIL: %s" % (self.path,))
         for line in self.messages:
-            grades.addMessage("    %s" % (line,))
+            grades.add_message("    %s" % (line,))
         return False
 
     # This should really be question level?
     #
-    def testPartial(self, grades, points, maxPoints):
-        grades.addPoints(points)
-        extraCredit = max(0, points - maxPoints)
-        regularCredit = points - extraCredit
+    def test_partial(self, grades, points, max_points):
+        grades.add_points(points)
+        extra_credit = max(0, points - max_points)
+        regular_credit = points - extra_credit
 
-        grades.addMessage(
+        grades.add_message(
             "%s: %s (%s of %s points)"
             % (
-                "PASS" if points >= maxPoints else "FAIL",
+                "PASS" if points >= max_points else "FAIL",
                 self.path,
-                regularCredit,
-                maxPoints,
+                regular_credit,
+                max_points,
             )
         )
-        if extraCredit > 0:
-            grades.addMessage("EXTRA CREDIT: %s points" % (extraCredit,))
+        if extra_credit > 0:
+            grades.add_message("EXTRA CREDIT: %s points" % (extra_credit,))
 
         for line in self.messages:
-            grades.addMessage("    %s" % (line,))
+            grades.add_message("    %s" % (line,))
 
         return True
 
-    def addMessage(self, message):
+    def add_message(self, message):
         self.messages.extend(message.split("\n"))
