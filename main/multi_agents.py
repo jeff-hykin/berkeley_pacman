@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 # multi_agents.py
 # --------------
 # Licensing Information:  You are free to use or extend these projects for
