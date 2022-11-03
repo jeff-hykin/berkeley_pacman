@@ -154,15 +154,15 @@ class GradingAgent(Agent):
         self.studentAgent = studentAgent
         self.optimalActions = optimalActions
         # create a set version 
-        self.optimal_actions = []
+        self.processed_optimal_actions = []
         for each_action_set in optimalActions:
-            optimal_actions = set()
+            processed_optimal_actions = set()
             for each_list_of_actions, number_of_explored_states in each_action_set:
                 for each_action_name in each_list_of_actions:
-                    optimal_actions.add((each_action_name, number_of_explored_states))
-            optimal_actions = list(optimal_actions)
-            optimal_actions.sort()
-            self.optimal_actions.append(optimal_actions)
+                    processed_optimal_actions.add((each_action_name, number_of_explored_states))
+            processed_optimal_actions = list(processed_optimal_actions)
+            processed_optimal_actions.sort()
+            self.processed_optimal_actions.append(processed_optimal_actions)
             
         self.altDepthActions = altDepthActions
         self.partialPlyBugActions = partialPlyBugActions
@@ -188,7 +188,7 @@ class GradingAgent(Agent):
         GameState.getAndResetExplored()
         student_action = (self.studentAgent.getAction(state), len(GameState.getAndResetExplored()))
         optimalActions = self.optimalActions[self.stepCount]
-        optimal_actions = self.optimal_actions[self.stepCount] # set of (action_name, number_of_explored_states) tuples
+        processed_optimal_actions = self.processed_optimal_actions[self.stepCount] # set of (action_name, number_of_explored_states) tuples
         altDepthActions = self.altDepthActions[self.stepCount]
         partialPlyBugActions = self.partialPlyBugActions[self.stepCount]
         students_action_name_was_optimal = False
@@ -198,17 +198,17 @@ class GradingAgent(Agent):
         # 
         # compare taken action with optimal
         # 
-        fully_correct = student_action in optimal_actions
+        fully_correct = student_action in processed_optimal_actions
         # check possible partly-correct
         if not fully_correct:
             action_name, number_of_states_expanded = student_action
             # check action correctness
             students_action_name_was_optimal = any([
-                action_name == each_optimal_action for each_optimal_action, optimal_number_of_states_expanded in optimal_actions 
+                action_name == each_optimal_action for each_optimal_action, optimal_number_of_states_expanded in processed_optimal_actions 
             ])
             # check explored_state correctness
             student_explored_correct_number_of_states = any([
-                number_of_states_expanded == optimal_number_of_states_expanded for each_optimal_action, optimal_number_of_states_expanded in optimal_actions 
+                number_of_states_expanded == optimal_number_of_states_expanded for each_optimal_action, optimal_number_of_states_expanded in processed_optimal_actions 
             ])
             # record what was wrong
             self.step_results[self.stepCount] = OrderedDict()
@@ -218,7 +218,7 @@ class GradingAgent(Agent):
             self.step_results[self.stepCount]["optimal number_of_states_expanded?"] =  student_explored_correct_number_of_states
             self.step_results[self.stepCount]["optimal combination?"] =  fully_correct
             self.step_results[self.stepCount]["student_combination"] =  (action_name, number_of_states_expanded)
-            self.step_results[self.stepCount]["possible/optimal combinations"] =  optimal_actions
+            self.step_results[self.stepCount]["possible/optimal combinations"] =  processed_optimal_actions
             
             
         if not fully_correct and not student_explored_correct_number_of_states:

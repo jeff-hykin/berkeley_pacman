@@ -2,7 +2,6 @@
 export TMPDIR="$FORNIX_HOME/tmp.cleanable"
 mkdir -p "$TMPDIR"
 
-echo 'which python3: '"$(which python3)"
 export VIRTUAL_ENV="$FORNIX_FOLDER/.venv"
 if ! [ -d "$VIRTUAL_ENV" ]
 then
