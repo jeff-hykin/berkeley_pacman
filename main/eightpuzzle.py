@@ -20,6 +20,7 @@ from builtins import range
 from builtins import object
 import search
 import random
+import tools
 
 # Module Classes
 
@@ -219,7 +220,13 @@ class EightPuzzleSearchProblem(search.SearchProblem):
         """
         succ = []
         for a in state.legalMoves():
-            succ.append((state.result(a), a, 1))
+            succ.append(
+                tools.Transition((
+                    state.result(a),
+                    a,
+                    1,
+                ))
+            )
         return succ
 
     def getCostOfActions(self, actions):

@@ -23,14 +23,6 @@ depth first search (dfs), run the following command:
 Commands to invoke other search strategies can be found in the project
 description.
 
-Please only change the parts of the file you are asked to.  Look for the lines
-that say
-
-"*** YOUR CODE HERE ***"
-
-The parts you fill in start about 3/4 of the way down.  Follow the project
-description for details.
-
 Good luck and happy searching!
 """
 from __future__ import print_function
@@ -44,6 +36,7 @@ from game import Actions
 import util
 import time
 import search
+import tools
 
 
 class GoWestAgent(Agent):
@@ -196,7 +189,7 @@ class PositionSearchProblem(search.SearchProblem):
             print("Warning: this does not look like a regular search maze")
 
         # For display purposes
-        self._visited, self._visitedlist, self._expanded = {}, [], 0  # DO NOT CHANGE
+        self._visited, self._visitedlist, self._expanded = {}, [], 0  # NOTE: STUFF WILL BREAK IF YOU CHANGE THIS
 
     def getStartState(self):
         return self.startState
@@ -242,10 +235,12 @@ class PositionSearchProblem(search.SearchProblem):
             if not self.walls[nextx][nexty]:
                 nextState = (nextx, nexty)
                 cost = self.costFn(nextState)
-                successors.append((nextState, action, cost))
+                successors.append(
+                    tools.Transition((nextState, action, cost))
+                )
 
         # Bookkeeping for display purposes
-        self._expanded += 1  # DO NOT CHANGE
+        self._expanded += 1  # NOTE: STUFF WILL BREAK IF YOU CHANGE THIS
         if state not in self._visited:
             self._visited[state] = True
             self._visitedlist.append(state)
@@ -338,15 +333,17 @@ class CornersProblem(search.SearchProblem):
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
                 print("Warning: no food in corner " + str(corner))
-        self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
+        self._expanded = 0  # NOTE: STUFF WILL BREAK IF YOU CHANGE THIS; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
+        # for example:
+        #     self.debugging = True
+        #     self.total_iterations = 0
         "*** YOUR CODE HERE ***"
 
     def getStartState(self):
         """
-        Returns the start state (in your state space, not the full Pacman state
-        space)
+        Returns the start state (in your state space, not the full Pacman state space)
         """
         "*** YOUR CODE HERE ***"
         util.raiseNotDefined()
@@ -359,33 +356,46 @@ class CornersProblem(search.SearchProblem):
         util.raiseNotDefined()
 
     def getSuccessors(self, state):
-        """
-        Returns successor states, the actions they require, and a cost of 1.
-
-         As noted in search.py:
-            For a given state, this should return a list of triples, (successor,
-            action, stepCost), where 'successor' is a successor to the current
-            state, 'action' is the action required to get there, and 'stepCost'
-            is the incremental cost of expanding to that successor
-        """
-
-        successors = []
-        for action in [
-            Directions.NORTH,
-            Directions.SOUTH,
-            Directions.EAST,
-            Directions.WEST,
-        ]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            "*** YOUR CODE HERE ***"
-
-        self._expanded += 1  # DO NOT CHANGE
+        
+        "*** YOUR CODE HERE ***"
+        # What should this return?
+        #     A list of Transitions, with a structure like this:
+        #     [
+        #         # first possible action
+        #         tools.Transition(
+        #             the_state_after_action,  # [ x, y ] coordinates [ integer, integer ]
+        #             the_action,              # one of: Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST
+        #             the_cost_of_action,      # float value
+        #         ),
+        #         # second possible action
+        #         tools.Transition(
+        #             next_possible_state,  # [ x, y ] coordinates (each are an int)
+        #             next_possible_action, # one of: Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST
+        #             cost_of_action,       # float
+        #         ),
+        #         # etc
+        #     ]
+        # 
+        # Note:
+        #     only add a transition if the action is legal
+        # 
+        # Example:
+        #     successors = []
+        #     for action in [
+        #         Directions.NORTH,
+        #         Directions.SOUTH,
+        #         Directions.EAST,
+        #         Directions.WEST,
+        #     ]:
+        #         x, y = state
+        #         dx, dy = Actions.directionToVector(action)
+        #         nextx, nexty = int(x + dx), int(y + dy)
+        #         if not self.walls[nextx][nexty]:
+        #             nextState = (nextx, nexty)
+        #             cost = self.costFn(nextState)
+        #             successors.append(tools.Transition(nextState, action, cost))
+        
+        self._expanded += 1  # NOTE: STUFF WILL BREAK IF YOU CHANGE THIS
         return successors
 
     def getCostOfActions(self, actions):
@@ -449,7 +459,7 @@ class FoodSearchProblem(object):
         )
         self.walls = startingGameState.getWalls()
         self.startingGameState = startingGameState
-        self._expanded = 0  # DO NOT CHANGE
+        self._expanded = 0  # NOTE: STUFF WILL BREAK IF YOU CHANGE THIS
         self.heuristicInfo = {}  # A dictionary for the heuristic to store information
 
     def getStartState(self):
@@ -461,7 +471,7 @@ class FoodSearchProblem(object):
     def getSuccessors(self, state):
         "Returns successor states, the actions they require, and a cost of 1."
         successors = []
-        self._expanded += 1  # DO NOT CHANGE
+        self._expanded += 1  # NOTE: STUFF WILL BREAK IF YOU CHANGE THIS
         for direction in [
             Directions.NORTH,
             Directions.SOUTH,
@@ -474,7 +484,13 @@ class FoodSearchProblem(object):
             if not self.walls[nextx][nexty]:
                 nextFood = state[1].copy()
                 nextFood[nextx][nexty] = False
-                successors.append((((nextx, nexty), nextFood), direction, 1))
+                successors.append(
+                    tools.Transition((
+                        ((nextx, nexty), nextFood),
+                        direction,
+                        1
+                    ))
+                )
         return successors
 
     def getCostOfActions(self, actions):
@@ -595,7 +611,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
         self.costFn = lambda x: 1
-        self._visited, self._visitedlist, self._expanded = {}, [], 0  # DO NOT CHANGE
+        self._visited, self._visitedlist, self._expanded = {}, [], 0  # NOTE: STUFF WILL BREAK IF YOU CHANGE THIS
 
     def isGoalState(self, state):
         """

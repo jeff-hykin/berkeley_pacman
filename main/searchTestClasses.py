@@ -24,6 +24,7 @@ import textwrap
 # import project specific code
 import layout
 import pacman
+import tools
 from search import SearchProblem
 
 # helper function for printing solutions in solution files
@@ -120,7 +121,7 @@ class GraphSearch(SearchProblem):
     # Get all successors of a state
     def getSuccessors(self, state):
         self.expanded_states.append(state)
-        return list(self.successors[state])
+        return [ tools.Transition(each) for each in self.successors[state] ]
 
     # Calculate total cost of a sequence of actions
     def getCostOfActions(self, actions):
