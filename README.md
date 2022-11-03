@@ -13,7 +13,7 @@ All the setup instructions inside [documentation/setup.md](https://github.com/je
 
 - `main/` contains all the code, however you can ignore many of the python files
 - `main/search.py` is where all your search algorithms should be.<br>(search for `*** YOUR CODE HERE ***`)
-- `main/searchAgents.py` is where all of your agents should be.
+- `main/search_agents.py` is where all of your agents should be.
 
 <br>
 
