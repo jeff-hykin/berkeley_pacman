@@ -171,7 +171,7 @@ class EightPuzzleState(object):
     def __hash__(self):
         return hash(str(self.cells))
 
-    def __getAsciiString(self):
+    def __get_ascii_string(self):
         """
         Returns a display string for the maze
         """
@@ -189,7 +189,7 @@ class EightPuzzleState(object):
         return "\n".join(lines)
 
     def __str__(self):
-        return self.__getAsciiString()
+        return self.__get_ascii_string()
 
 
 # TODO: Implement The methods in this class

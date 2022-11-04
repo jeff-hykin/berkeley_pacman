@@ -133,7 +133,7 @@ class GameState(object):
         GhostRules.check_death(state, agent_index)
 
         # Book keeping
-        state.data._agentMoved = agent_index
+        state.data._agent_moved = agent_index
         state.data.score += state.data.score_change
         GameState.explored.add(self.__hash__())
         GameState.explored.add(state.__hash__())
@@ -440,7 +440,7 @@ class PacmanRules(object):
             state.data.score_change += 10
             state.data.food = state.data.food.copy()
             state.data.food[x][y] = False
-            state.data._foodEaten = position
+            state.data._food_eaten = position
             # TODO: cache num_food?
             num_food = state.get_num_food()
             if num_food == 0 and not state.data._lose:
@@ -449,7 +449,7 @@ class PacmanRules(object):
         # Eat capsule
         if position in state.get_capsules():
             state.data.capsules.remove(position)
-            state.data._capsuleEaten = position
+            state.data._capsule_eaten = position
             # Reset all ghosts' scared timers
             for index in range(1, len(state.data.agent_states)):
                 state.data.agent_states[index].scared_timer = SCARED_TIME

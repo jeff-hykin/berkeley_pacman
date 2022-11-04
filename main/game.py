@@ -190,7 +190,7 @@ class Grid(object):
         self.height = height
         self.data = [[initial_value for y in range(height)] for x in range(width)]
         if bit_representation:
-            self._unpackBits(bit_representation)
+            self._unpack_bits(bit_representation)
 
     def __getitem__(self, i):
         return self.data[i]
@@ -256,7 +256,7 @@ class Grid(object):
         current_int = 0
         for i in range(self.height * self.width):
             bit = self.CELLS_PER_INT - (i % self.CELLS_PER_INT) - 1
-            x, y = self._cellIndexToPosition(i)
+            x, y = self._cell_index_to_position(i)
             if self[x][y]:
                 current_int += 2 ** bit
             if (i + 1) % self.CELLS_PER_INT == 0:
@@ -265,25 +265,25 @@ class Grid(object):
         bits.append(current_int)
         return tuple(bits)
 
-    def _cellIndexToPosition(self, index):
+    def _cell_index_to_position(self, index):
         x = old_div(index, self.height)
         y = index % self.height
         return x, y
 
-    def _unpackBits(self, bits):
+    def _unpack_bits(self, bits):
         """
         Fills in data from a bit-level representation
         """
         cell = 0
         for packed in bits:
-            for bit in self._unpackInt(packed, self.CELLS_PER_INT):
+            for bit in self._unpack_int(packed, self.CELLS_PER_INT):
                 if cell == self.width * self.height:
                     break
-                x, y = self._cellIndexToPosition(cell)
+                x, y = self._cell_index_to_position(cell)
                 self[x][y] = bit
                 cell += 1
 
-    def _unpackInt(self, packed, size):
+    def _unpack_int(self, packed, size):
         bools = []
         if packed < 0:
             raise ValueError("must be a positive integer")
@@ -323,11 +323,11 @@ class Actions(object):
         Directions.STOP: (0, 0),
     }
     # # Original line
-    # _directionsAsList = list(_directions.items())
+    # _directions_as_list = list(_directions.items())
     # # Python3 value
-    # _directionsAsList = [('North', (0, 1)), ('South', (0, -1)), ('East', (1, 0)), ('West', (-1, 0)), ('Stop', (0, 0))]
+    # _directions_as_list = [('North', (0, 1)), ('South', (0, -1)), ('East', (1, 0)), ('West', (-1, 0)), ('Stop', (0, 0))]
     # Python2 value
-    _directionsAsList = [('West', (-1, 0)), ('Stop', (0, 0)), ('East', (1, 0)), ('North', (0, 1)), ('South', (0, -1))]
+    _directions_as_list = [('West', (-1, 0)), ('Stop', (0, 0)), ('East', (1, 0)), ('North', (0, 1)), ('South', (0, -1))]
 
     TOLERANCE = 0.001
 
@@ -373,7 +373,7 @@ class Actions(object):
         if abs(x - x_int) + abs(y - y_int) > Actions.TOLERANCE:
             return [config.get_direction()]
 
-        for dir, vec in Actions._directionsAsList:
+        for dir, vec in Actions._directions_as_list:
             dx, dy = vec
             next_y = y_int + dy
             next_x = x_int + dx
@@ -388,7 +388,7 @@ class Actions(object):
         x, y = position
         x_int, y_int = int(x + 0.5), int(y + 0.5)
         neighbors = []
-        for dir, vec in Actions._directionsAsList:
+        for dir, vec in Actions._directions_as_list:
             dx, dy = vec
             next_x = x_int + dx
             if next_x < 0 or next_x == walls.width:
@@ -425,10 +425,10 @@ class GameStateData(object):
             self._eaten = prev_state._eaten
             self.score = prev_state.score
 
-        self._foodEaten = None
-        self._foodAdded = None
-        self._capsuleEaten = None
-        self._agentMoved = None
+        self._food_eaten = None
+        self._food_added = None
+        self._capsule_eaten = None
+        self._agent_moved = None
         self._lose = False
         self._win = False
         self.score_change = 0
@@ -437,10 +437,10 @@ class GameStateData(object):
         state = GameStateData(self)
         state.food = self.food.deep_copy()
         state.layout = self.layout.deep_copy()
-        state._agentMoved = self._agentMoved
-        state._foodEaten = self._foodEaten
-        state._foodAdded = self._foodAdded
-        state._capsuleEaten = self._capsuleEaten
+        state._agent_moved = self._agent_moved
+        state._food_eaten = self._food_eaten
+        state._food_added = self._food_added
+        state._capsule_eaten = self._capsule_eaten
         return state
 
     def copy_agent_states(self, agent_states):
@@ -494,7 +494,7 @@ class GameStateData(object):
         for x in range(width):
             for y in range(height):
                 food, walls = self.food, self.layout.walls
-                map[x][y] = self._foodWallStr(food[x][y], walls[x][y])
+                map[x][y] = self._food_wall_str(food[x][y], walls[x][y])
 
         for agent_state in self.agent_states:
             if agent_state == None:
@@ -504,16 +504,16 @@ class GameStateData(object):
             x, y = [int(i) for i in nearest_point(agent_state.configuration.pos)]
             agent_dir = agent_state.configuration.direction
             if agent_state.is_pacman:
-                map[x][y] = self._pacStr(agent_dir)
+                map[x][y] = self._pac_str(agent_dir)
             else:
-                map[x][y] = self._ghostStr(agent_dir)
+                map[x][y] = self._ghost_str(agent_dir)
 
         for x, y in self.capsules:
             map[x][y] = "o"
 
         return str(map) + ("\nScore: %d\n" % self.score)
 
-    def _foodWallStr(self, has_food, has_wall):
+    def _food_wall_str(self, has_food, has_wall):
         if has_food:
             return "."
         elif has_wall:
@@ -521,7 +521,7 @@ class GameStateData(object):
         else:
             return " "
 
-    def _pacStr(self, dir):
+    def _pac_str(self, dir):
         if dir == Directions.NORTH:
             return "v"
         if dir == Directions.SOUTH:
@@ -530,7 +530,7 @@ class GameStateData(object):
             return ">"
         return "<"
 
-    def _ghostStr(self, dir):
+    def _ghost_str(self, dir):
         return "G"
         if dir == Directions.NORTH:
             return "M"
@@ -609,7 +609,7 @@ class Game(object):
         else:
             return self.rules.get_progress(self)
 
-    def _agentCrash(self, agent_index, quiet=False):
+    def _agent_crash(self, agent_index, quiet=False):
         "Helper method for handling agent crashes"
         if not quiet:
             traceback.print_exc()
@@ -656,7 +656,7 @@ class Game(object):
                 # the other team wins
                 print("Agent %d failed to load" % i, file=sys.stderr)
                 self.unmute()
-                self._agentCrash(i, quiet=True)
+                self._agent_crash(i, quiet=True)
                 return
             if "register_initial_state" in dir(agent):
                 self.mute(i)
@@ -678,10 +678,10 @@ class Game(object):
                             )
                             self.unmute()
                             self.agent_timeout = True
-                            self._agentCrash(i, quiet=True)
+                            self._agent_crash(i, quiet=True)
                             return
                     except Exception as data:
-                        self._agentCrash(i, quiet=False)
+                        self._agent_crash(i, quiet=False)
                         self.unmute()
                         return
                 else:
@@ -714,7 +714,7 @@ class Game(object):
                         move_time += time.time() - start_time
                         self.unmute()
                     except Exception as data:
-                        self._agentCrash(agent_index, quiet=False)
+                        self._agent_crash(agent_index, quiet=False)
                         self.unmute()
                         return
                 else:
@@ -743,7 +743,7 @@ class Game(object):
                             file=sys.stderr,
                         )
                         self.agent_timeout = True
-                        self._agentCrash(agent_index, quiet=True)
+                        self._agent_crash(agent_index, quiet=True)
                         self.unmute()
                         return
 
@@ -765,7 +765,7 @@ class Game(object):
                                 file=sys.stderr,
                             )
                             self.agent_timeout = True
-                            self._agentCrash(agent_index, quiet=True)
+                            self._agent_crash(agent_index, quiet=True)
                             self.unmute()
                             return
 
@@ -780,12 +780,12 @@ class Game(object):
                             file=sys.stderr,
                         )
                         self.agent_timeout = True
-                        self._agentCrash(agent_index, quiet=True)
+                        self._agent_crash(agent_index, quiet=True)
                         self.unmute()
                         return
                     self.unmute()
                 except Exception as data:
-                    self._agentCrash(agent_index)
+                    self._agent_crash(agent_index)
                     self.unmute()
                     return
             else:
@@ -799,7 +799,7 @@ class Game(object):
                     self.state = self.state.generate_successor(agent_index, action)
                 except Exception as data:
                     self.mute(agent_index)
-                    self._agentCrash(agent_index)
+                    self._agent_crash(agent_index)
                     self.unmute()
                     return
             else:
@@ -831,7 +831,7 @@ class Game(object):
                 except Exception as data:
                     if not self.catch_exceptions:
                         raise
-                    self._agentCrash(agent_index)
+                    self._agent_crash(agent_index)
                     self.unmute()
                     return
         self.display.finish()

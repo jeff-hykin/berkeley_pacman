@@ -266,7 +266,7 @@ class PacmanGraphics(object):
         refresh()
 
     def update(self, new_state):
-        agent_index = new_state._agentMoved
+        agent_index = new_state._agent_moved
         agent_state = new_state.agent_states[agent_index]
 
         if self.agent_images[agent_index][0].is_pacman != agent_state.is_pacman:
@@ -278,10 +278,10 @@ class PacmanGraphics(object):
             self.move_ghost(agent_state, agent_index, prev_state, prev_image)
         self.agent_images[agent_index] = (agent_state, prev_image)
 
-        if new_state._foodEaten != None:
-            self.remove_food(new_state._foodEaten, self.food)
-        if new_state._capsuleEaten != None:
-            self.remove_capsule(new_state._capsuleEaten, self.capsules)
+        if new_state._food_eaten != None:
+            self.remove_food(new_state._food_eaten, self.food)
+        if new_state._capsule_eaten != None:
+            self.remove_capsule(new_state._capsule_eaten, self.capsules)
         self.info_pane.update_score(new_state.score)
         if "ghost_distances" in dir(new_state):
             self.info_pane.update_ghost_distances(new_state.ghost_distances)
