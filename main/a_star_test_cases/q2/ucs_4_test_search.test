@@ -1,0 +1,16 @@
+class: "PacmanSearchTest"
+algorithm: "uniform_cost_search"
+points: "0.5"
+
+# The following specifies the layout to be used 
+layout_name: "test_search"
+layout: """
+%%%%%
+%.P %
+%%% %
+%.  %
+%%%%%
+"""
+search_problem_class: "FoodSearchProblem"
+leeway_factor: "2"
+

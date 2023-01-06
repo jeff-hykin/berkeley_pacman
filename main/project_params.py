@@ -13,6 +13,13 @@
 
 
 choices = {
+    "a_star_only": {
+        "STUDENT_CODE_DEFAULT" : "search_agents.py,search.py",
+        "PROJECT_TEST_CLASSES" : "search_test_classes.py",
+        "PROJECT_NAME" : "Project 1: A Star",
+        "BONUS_PIC" : False,
+        "TEST_CASES": "a_star_test_cases",
+    },
     "search_agent": {
         "STUDENT_CODE_DEFAULT" : "search_agents.py,search.py",
         "PROJECT_TEST_CLASSES" : "search_test_classes.py",
