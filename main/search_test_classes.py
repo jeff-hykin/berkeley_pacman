@@ -121,7 +121,10 @@ class GraphSearch(SearchProblem):
     # Get all successors of a state
     def get_successors(self, state):
         self.expanded_states.append(state)
-        return [ tools.Transition(each) for each in self.successors[state] ]
+        if state in self.successors:
+            return [ tools.Transition(each) for each in self.successors[state] ]
+        else:
+            return []
 
     # Calculate total cost of a sequence of actions
     def get_cost_of_actions(self, actions):
