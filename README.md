@@ -1,11 +1,16 @@
 # What is this?
 - This is an updated version (from python2 to python3) of the [Berkeley Pacman](http://ai.berkeley.edu/search.html) project. Its nearly 1-to-1 so you should be able to follow along with their general ideas.
+Changes:
+- It has been formatted using Black (pypi)
+- The casing has been standardized to snake case
+- A light version of wumpus world has been added
+
 
 <br>
 
 # How do I get this code to run?
 
-All the setup instructions inside [documentation/setup.md](https://github.com/jeff-hykin/berkeley_pacman/blob/master/documentation/setup.md)
+All the setup instructions are inside [documentation/setup.md](https://github.com/jeff-hykin/berkeley_pacman/blob/master/documentation/setup.md)
 
 <br>
 
