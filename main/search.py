@@ -19,6 +19,7 @@ Pacman agents (in search_agents.py).
 
 from builtins import object
 import util
+import os
 
 def tiny_maze_search(problem):
     """
@@ -33,9 +34,9 @@ def tiny_maze_search(problem):
 
 
 def depth_first_search(problem):
-    "*** YOUR CODE HERE ***"
+    
     # What does this function need to return?
-    #     list of actions that reaches the goal
+    #     list of actions (actions shown below) that reaches the goal
     # 
     # What data is available?
     #     start_state = problem.get_start_state() # returns a string
@@ -57,7 +58,9 @@ def depth_first_search(problem):
     # Example:
     #     start_state = problem.get_start_state()
     #     transitions = problem.get_successors(start_state)
-    #     return [  transitions[0].action  ]
+    #     example_path = [  transitions[0].action  ]
+    #     path_cost = problem.get_cost_of_actions(example_path)
+    #     return example_path
     
     util.raise_not_defined()
 
@@ -74,43 +77,47 @@ def uniform_cost_search(problem, heuristic=None):
     util.raise_not_defined()
 
 
+# 
+# heuristics
+# 
+def a_really_really_bad_heuristic(position, problem):
+    from random import random, sample, choices
+    return int(random()*1000)
+
 def null_heuristic(state, problem=None):
-    """
-    A heuristic function estimates the cost from the current state to the nearest
-    goal in the provided SearchProblem.  This heuristic is trivial.
-    """
     return 0
 
+def your_heuristic(state, problem=None):
+    from search_agents import FoodSearchProblem
+    
+    # 
+    # heuristic for the find-the-goal problem
+    # 
+    if isinstance(problem, SearchProblem):
+        # data
+        pacman_x, pacman_y = state
+        goal_x, goal_y     = problem.goal
+        
+        # YOUR CODE HERE (set value of optimisitic_number_of_steps_to_goal)
+        
+        optimisitic_number_of_steps_to_goal = 0
+        return optimisitic_number_of_steps_to_goal
+    # 
+    # traveling-salesman problem (collect multiple food pellets)
+    # 
+    elif isinstance(problem, FoodSearchProblem):
+        # the state includes a grid of where the food is (problem isn't ter)
+        position, food_grid = state
+        pacman_x, pacman_y = position
+        
+        # YOUR CODE HERE (set value of optimisitic_number_of_steps_to_goal)
+        
+        optimisitic_number_of_steps_to_goal = 0
+        return optimisitic_number_of_steps_to_goal
 
-def a_star_search(problem, heuristic=null_heuristic):
+def a_star_search(problem, heuristic=your_heuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    
-    # What does this function need to return?
-    #     list of actions that reaches the goal
-    # 
-    # What data is available?
-    #     start_state = problem.get_start_state() # returns a string
-    # 
-    #     problem.is_goal_state(start_state) # returns boolean
-    # 
-    #     transitions = problem.get_successors(start_state)
-    #     transitions[0].state
-    #     transitions[0].action
-    #     transitions[0].cost
-    # 
-    #     print(transitions) # would look like the list-of-lists on the next line
-    #     [
-    #         [ "B", "0:A->B", 1.0, ],
-    #         [ "C", "1:A->C", 2.0, ],
-    #         [ "D", "2:A->D", 4.0, ],
-    #     ]
-    # 
-    # Example:
-    #     start_state = problem.get_start_state()
-    #     transitions = problem.get_successors(start_state)
-    #     return [  transitions[0].action  ]
-    
     util.raise_not_defined()
 
 
@@ -159,6 +166,7 @@ class SearchProblem(object):
         """
         util.raise_not_defined()
 
+if os.path.exists("./hidden/search.py"): from hidden.search import *
 # fallback on a_star_search
 for function in [breadth_first_search, depth_first_search, uniform_cost_search, ]:
     try: function(None)

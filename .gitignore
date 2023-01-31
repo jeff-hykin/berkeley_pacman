@@ -3,6 +3,7 @@
 # 
 .venv3
 .venv2
+main/hidden/*
 
 # 
 # standard

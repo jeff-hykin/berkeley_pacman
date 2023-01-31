@@ -290,7 +290,7 @@ class GameState(object):
         # 
         score_hash = str(self.data.score)
         
-        return food_hash + hash_seperator + agent_state_hash + hash_seperator + capsules_hash + hash_seperator + score_hash
+        return hash(food_hash + hash_seperator + agent_state_hash + hash_seperator + capsules_hash + hash_seperator + score_hash)
 
 
     def __str__(self):
@@ -807,7 +807,7 @@ def load_agent(pacman, nographics):
                         "Using the keyboard requires graphics (not text display)"
                     )
                 return getattr(module, pacman)
-    raise Exception("The agent " + pacman + " is not specified in any *Agents.py.")
+    raise Exception("The agent '" + pacman + "' is not specified in any *Agents.py.")
 
 
 def replay_game(layout, actions, display):
