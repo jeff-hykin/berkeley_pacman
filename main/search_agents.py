@@ -77,7 +77,7 @@ class SearchAgent(Agent):
         self,
         fn="depth_first_search",
         prob="PositionSearchProblem",
-        heuristic="null_heuristic",
+        heuristic=None,
     ):
         # Warning: some advanced Python magic is employed below to find the right functions and problems
 
@@ -93,14 +93,20 @@ class SearchAgent(Agent):
                 heur = globals()[heuristic]
             elif heuristic in dir(search):
                 heur = getattr(search, heuristic)
+            elif heuristic is None:
+                heur = None
             else:
                 raise_(
                     AttributeError,
                     heuristic + " is not a function in search_agents.py or search.py.",
                 )
-            print("[SearchAgent] using function %s and heuristic %s" % (fn, heuristic))
-            # Note: this bit of Python trickery combines the search algorithm and the heuristic
-            self.search_function = lambda x: func(x, heuristic=heur)
+            if heur:
+                print("[SearchAgent] using function %s and heuristic %s" % (fn, heuristic))
+                # Note: this bit of Python trickery combines the search algorithm and the heuristic
+                self.search_function = lambda x: func(x, heuristic=heur)
+            # allow the function's default heuristic to be used
+            else:
+                self.search_function = lambda x: func(x)
 
         # Get the search problem type from the name
         if prob not in list(globals().keys()) or not prob.endswith("Problem"):
