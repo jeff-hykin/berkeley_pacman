@@ -646,7 +646,7 @@ def read_command(argv):
         type="float",
         dest="zoom",
         help=default("Zoom the size of the graphics window"),
-        default=1.0,
+        default=None, # will end up being 1.0 or smaller based on board size
     )
     parser.add_option(
         "-f",
@@ -708,7 +708,7 @@ def read_command(argv):
         ),
         default=30,
     )
-
+    
     options, otherjunk = parser.parse_args(argv)
     if len(otherjunk) != 0:
         raise Exception("Command line input not understood: " + str(otherjunk))
@@ -722,6 +722,16 @@ def read_command(argv):
     args["layout"] = layout.get_layout(options.layout)
     if args["layout"] == None:
         raise Exception("The layout " + options.layout + " cannot be found")
+    
+    # 
+    # auto 
+    # 
+    default_zoom = 1.0
+    number_of_lines_in_layout = len(f'''{args["layout"]}'''.split("\n"))
+    threshold_for_scaling = 25 # this is based on screen size. If you have a really tiny screen this number should be smaller
+    if number_of_lines_in_layout > threshold_for_scaling:
+        # scale the size down otherwise clipping will occur and it will switch to the smallest layout
+        default_zoom = threshold_for_scaling/number_of_lines_in_layout
 
     # Choose a Pacman agent
     no_keyboard = options.game_to_replay == None and (
@@ -759,7 +769,7 @@ def read_command(argv):
         import graphics_display
 
         args["display"] = graphics_display.PacmanGraphics(
-            options.zoom, frame_time=options.frame_time
+            options.zoom or default_zoom, frame_time=options.frame_time
         )
     args["num_games"] = options.num_games
     args["record"] = options.record
