@@ -118,6 +118,15 @@ def your_heuristic(state, problem=None):
 def a_star_search(problem, heuristic=your_heuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    
+    # 
+    # NOTE: the `heuristic` argument above is a function. 
+    # you can call it just like any other function
+    # for example:
+    #     state = YOUR CODE HERE       # (see comments in depth_first_search above)
+    #     priority = depth + heuristic(state, problem)
+    #
+    
     util.raise_not_defined()
 
 
